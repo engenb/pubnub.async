@@ -1,0 +1,100 @@
+# Release CI
+-
+  branches:
+    only:
+      - master
+  version: 0.1.0.0
+  os: Visual Studio 2015
+  configuration: Release
+  assembly_info:
+    patch: true
+    file: '**\SharedAssemblyVersionInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  environment:
+    COVERALLS_REPO_TOKEN:
+      secure: UWbidwBYT3mNlEu9xdomLO7knMkYgM2e0Wz3bHvQI8tnrxwyrR3STYWiJR7fDr/4
+  before_build:
+  - cmd: nuget restore src\PubNub.Async.sln
+  build:
+    publish_nuget: true
+    publish_nuget_symbols: true
+    include_nuget_references: true
+    project: src\PubNub.Async.sln
+    verbosity: minimal
+  test_script:
+  - cmd: >-
+      src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:src\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe -targetargs:"src\PubNub.Async.Tests\bin\release\PubNub.Async.Tests.dll -noshadow -appveyor" -filter:"+[PubNub.Async*]* -[*.Tests]*" -output:coverage.xml
+      
+      src\packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: UDzyB4rW2T34FpiDGyfUCSlSU0OljTZuIphVPbPxvm6RIElHiyZ021zOwKBNFn33
+
+# Development CI
+-
+  branches:
+    only:
+      - development
+  version: 0.1.{build}.0-beta
+  os: Visual Studio 2015
+  configuration: Debug
+  assembly_info:
+    patch: true
+    file: '**\SharedAssemblyVersionInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  environment:
+    COVERALLS_REPO_TOKEN:
+      secure: UWbidwBYT3mNlEu9xdomLO7knMkYgM2e0Wz3bHvQI8tnrxwyrR3STYWiJR7fDr/4
+  before_build:
+  - cmd: nuget restore src\PubNub.Async.sln
+  build:
+    publish_nuget: true
+    publish_nuget_symbols: true
+    include_nuget_references: true
+    project: src\PubNub.Async.sln
+    verbosity: minimal
+  after_test:
+  - cmd: >-
+      src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:src\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe -targetargs:"src\PubNub.Async.Tests\bin\debug\PubNub.Async.Tests.dll -noshadow -appveyor" -filter:"+[PubNub.Async*]* -[*.Tests]*" -output:coverage.xml
+      
+      src\packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: UDzyB4rW2T34FpiDGyfUCSlSU0OljTZuIphVPbPxvm6RIElHiyZ021zOwKBNFn33
+
+# Branches and Pull Requests - no nuget publish
+-
+  branches:
+    except:
+      - master
+      - development
+  version: 0.1.{build}.0-branch
+  pull_requests:
+    do_not_increment_build_number: true
+  os: Visual Studio 2015
+  configuration: Debug
+  assembly_info:
+    patch: true
+    file: '**\SharedAssemblyVersionInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  environment:
+    COVERALLS_REPO_TOKEN:
+      secure: UWbidwBYT3mNlEu9xdomLO7knMkYgM2e0Wz3bHvQI8tnrxwyrR3STYWiJR7fDr/4
+  before_build:
+  - cmd: nuget restore src\PubNub.Async.sln
+  build:
+    project: src\PubNub.Async.sln
+    verbosity: minimal
+  after_test:
+  - cmd: >-
+      src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:src\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe -targetargs:"src\PubNub.Async.Tests\bin\debug\PubNub.Async.Tests.dll -noshadow -appveyor" -filter:"+[PubNub.Async*]* -[*.Tests]*" -output:coverage.xml
+      
+      src\packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover coverage.xml
