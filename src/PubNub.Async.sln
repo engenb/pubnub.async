@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A7AB9C72-ADCF-485F-8043-37B117EE7780}"
 EndProject
@@ -14,6 +14,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async", "PubNub.Async\PubNub.Async.csproj", "{FEBF07A0-0BB0-4A33-B216-822D0325CED2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Testing", "PubNub.Async.Testing\PubNub.Async.Testing.csproj", "{957E99DC-BA52-46C4-98E1-9D50445A4B7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Autofac", "PubNub.Async.Autofac\PubNub.Async.Autofac.csproj", "{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Autofac.Tests", "PubNub.Async.Autofac.Tests\PubNub.Async.Autofac.Tests.csproj", "{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,11 +35,24 @@ Global
 		{FEBF07A0-0BB0-4A33-B216-822D0325CED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEBF07A0-0BB0-4A33-B216-822D0325CED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEBF07A0-0BB0-4A33-B216-822D0325CED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{957E99DC-BA52-46C4-98E1-9D50445A4B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957E99DC-BA52-46C4-98E1-9D50445A4B7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957E99DC-BA52-46C4-98E1-9D50445A4B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957E99DC-BA52-46C4-98E1-9D50445A4B7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F9A1A685-CD1D-433A-B0B9-2F65CE593C55} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
+		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
 	EndGlobalSection
 EndGlobal

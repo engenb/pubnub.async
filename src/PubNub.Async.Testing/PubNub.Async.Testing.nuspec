@@ -7,7 +7,7 @@
 		<title>$title$</title>
 		<authors>$author$</authors>
 		<owners>$author$</owners>
-		<licenseUrl>https://raw.githubusercontent.com/engenb/pubnub.async.pcl/history/LICENSE</licenseUrl>
+		<licenseUrl>https://raw.githubusercontent.com/engenb/pubnub.async.pcl/setup/LICENSE</licenseUrl>
 		<projectUrl>https://github.com/engenb/pubnub.async.pcl</projectUrl>
 		<!--iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl-->
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -15,6 +15,6 @@
 		<releaseNotes>
 		</releaseNotes>
 		<copyright>Copyright 2016</copyright>
-		<tags>pubnub async pcl</tags>
+		<tags>pubnub async pcl xamarin</tags>
 	</metadata>
 </package>
