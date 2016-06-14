@@ -70,7 +70,7 @@ namespace PubNub.Async.Tests.Services.History
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNubWithSSL__When_HistoryNotEnabled__Then_GetError()
 		{
@@ -89,7 +89,7 @@ namespace PubNub.Async.Tests.Services.History
 			Assert.Equal(expectedError, response.Error);
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNubWithSSL__When_UnencryptedCountIsThreeAndReverse__Then_GetFirstThree()
 		{
@@ -114,7 +114,7 @@ namespace PubNub.Async.Tests.Services.History
 			Assert.Equal(14621647091558573L, response.Newest);
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNubWithSSL__When_TimeOmitted__Then_GetFirstThreeWithoutTime()
 		{
@@ -139,7 +139,7 @@ namespace PubNub.Async.Tests.Services.History
 			Assert.Equal(14621647091558573L, response.Newest);
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNubWithSSL__When_EncryptedCountIsThreeAndReverse__Then_GetDecryptFirstThree()
 		{
@@ -154,7 +154,7 @@ namespace PubNub.Async.Tests.Services.History
 				})
 				.History<HistoryTestMessage>(count: expectedCount, order: HistoryOrder.Reverse);
 
-			Assert.NotNull(response.Messages);
+			Assert.NotNull(response?.Messages);
 			Assert.Equal(expectedCount, response.Messages.Length);
 
 			var messages = response.Messages.ToArray();
@@ -169,7 +169,7 @@ namespace PubNub.Async.Tests.Services.History
 			Assert.Equal(14646739500961712L, response.Newest);
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category" ,"integration")]
 		public async Task History__Given_ConfiguredPubNub__When_Count250Reverse__Then_Fetch250InReverseOrder()
 		{
@@ -200,7 +200,7 @@ namespace PubNub.Async.Tests.Services.History
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "L&L")]
 		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNub__When_Count250__Then_Fetch250InChronologicalOrder()
 		{
