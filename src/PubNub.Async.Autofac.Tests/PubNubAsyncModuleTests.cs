@@ -16,8 +16,15 @@ namespace PubNub.Async.Autofac.Tests
 
 			var crypto = PubNub.GlobalSettings.CryptoFactory();
 			Assert.NotNull(crypto);
-
+			
 			var client = new PubNubClient("channel");
+			
+			var publish = PubNub.GlobalSettings.PublishFactory(client);
+			Assert.NotNull(publish);
+
+			var access = PubNub.GlobalSettings.AccessFactory(client);
+			Assert.NotNull(access);
+
 			var history = PubNub.GlobalSettings.HistoryFactory(client);
 			Assert.NotNull(history);
 		}

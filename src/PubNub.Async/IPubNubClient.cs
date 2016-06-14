@@ -9,8 +9,12 @@ namespace PubNub.Async
 		Channel Channel { get; }
 		IPubNubSettings Settings { get; }
 
-		IPubNubClient ConfigureClient(Action<IPubNubSettings> action);
+		IPubNubClient ConfigurePubNub(Action<IPubNubSettings> action);
+
 		IPubNubClient Encrypted();
 		IPubNubClient EncryptedWith(string cipher);
+
+		IPubNubClient Secured(int? accessTimeout = null);
+		IPubNubClient SecuredWith(string authenticationKey, int? accessTimeout = null);
 	}
 }

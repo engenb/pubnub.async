@@ -22,16 +22,34 @@ namespace PubNub.Async.Services.Crypto
 			return Encoding.UTF8.GetString(decryptedBytes, 0, decryptedBytes.Length);
 		}
 
-		private static byte[] BuildCipher(string cipherSrc)
+		public string Encrypt(string cipher, string source)
 		{
-			var inputBytes = Encoding.UTF8.GetBytes(cipherSrc);
-			var hasher = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithm.Sha256);
-			var hashedBytes = hasher.HashData(inputBytes);
-			var hashedString = BitConverter.ToString(hashedBytes);
-			//modified from PubNub client source
-			return Encoding.UTF8.GetBytes(hashedString.Replace("-", string.Empty)
-				.Substring(0, 32)
-				.ToLower());
+			var provider = SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithm.AesCbcPkcs7);
+
+			//convert to bytes
+			var sourceBytes = Encoding.UTF8.GetBytes(source);
+			//encrypt the content
+			var key = provider.CreateSymmetricKey(BuildCipher(cipher));
+			var encryptedBytes = CryptographicEngine.Encrypt(key, sourceBytes, IV);
+			//encode the content
+			return Convert.ToBase64String(encryptedBytes);
+		}
+
+		public string Hash(string source, HashAlgorithm algo)
+		{
+			var sourceBytes = Encoding.UTF8.GetBytes(source);
+			var hasher = HashAlgorithmProvider.OpenAlgorithm(algo);
+			var hashedBytes = hasher.HashData(sourceBytes);
+			return BitConverter.ToString(hashedBytes)
+				.Replace("-", string.Empty)
+				.ToLower();
+		}
+
+		private byte[] BuildCipher(string cipherSrc)
+		{
+			var hashedCipher = Hash(cipherSrc, HashAlgorithm.Sha256);
+			//get the first 32 bytes
+			return Encoding.UTF8.GetBytes(hashedCipher.Substring(0, 32));
 		}
 	}
 }

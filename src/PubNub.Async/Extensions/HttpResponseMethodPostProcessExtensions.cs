@@ -11,7 +11,7 @@ namespace PubNub.Async.Extensions
 				.StripCharsetQuotes();
 		}
 
-		private static HttpResponseMessage StripCharsetQuotes(this HttpResponseMessage response)
+		public static HttpResponseMessage StripCharsetQuotes(this HttpResponseMessage response)
 		{
 			if (response?.Content?.Headers?.ContentType?.CharSet != null)
 			{

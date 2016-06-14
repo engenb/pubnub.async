@@ -9,7 +9,7 @@ namespace PubNub.Async.Services.History
 			long? first = null,
 			long? last = null,
 			int? count = null,
-			bool reverse = false,
+			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true);
 	}
 }

@@ -5,14 +5,14 @@ namespace PubNub.Async.Configuration
 {
 	public static class ConfigurationExtensions
 	{
-		public static IPubNubClient ConfigureClient(this string channel, Action<IPubNubSettings> action)
+		public static IPubNubClient ConfigurePubNub(this string channel, Action<IPubNubSettings> action)
 		{
-			return new PubNubClient(channel).ConfigureClient(action);
+			return new PubNubClient(channel).ConfigurePubNub(action);
 		}
 
-		public static IPubNubClient ConfigureClient(this Channel channel, Action<IPubNubSettings> action)
+		public static IPubNubClient ConfigurePubNub(this Channel channel, Action<IPubNubSettings> action)
 		{
-			return new PubNubClient(channel).ConfigureClient(action);
+			return new PubNubClient(channel).ConfigurePubNub(action);
 		}
 	}
 }

@@ -8,43 +8,49 @@ using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Models.History;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Crypto;
 
 namespace PubNub.Async.Services.History
 {
 	public class HistoryService : IHistoryService
 	{
-		public HistoryService(IPubNubClient client, ICryptoService crypto)
-		{
-			Crypto = crypto;
-			Settings = client.Settings;
-			Channel = client.Channel;
-		}
-
 		private ICryptoService Crypto { get; }
+		private IAccessManager Access { get; }
 
 		private IPubNubSettings Settings { get; }
 		private Channel Channel { get; }
+
+		public HistoryService(IPubNubClient client, ICryptoService crypto, IAccessManager access)
+		{
+			Crypto = crypto;
+			Access = access;
+
+			Settings = client.Settings;
+			Channel = client.Channel;
+		}
 
 		public async Task<HistoryResponse<TContent>> History<TContent>(
 			long? first = null,
 			long? last = null,
 			int? count = null,
-			bool reverse = false,
+			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
+			var reverse = order == HistoryOrder.Reverse;
+
 			var batch = await FetchHistory<TContent>(first, last, count, reverse, includeTime);
-			if (reverse && batch.Messages != null)
+			if (reverse && batch?.Messages != null)
 			{
 				batch.Messages = batch.Messages.Reverse().ToArray();
 			}
-			var responseMessageCount = batch.Messages?.Length;
+			var responseMessageCount = batch?.Messages?.Length;
 			if (count > 100 && responseMessageCount == 100) //recurse
 			{
 				var nextBatchCount = count - responseMessageCount;
 				var nextBatchFirst = reverse ? batch.Newest : batch.Oldest;
 
-				var nextBatch = await History<TContent>(nextBatchFirst, last, nextBatchCount, reverse, includeTime);
+				var nextBatch = await History<TContent>(nextBatchFirst, last, nextBatchCount, order, includeTime);
 				
 				batch.Messages = nextBatch.Messages
 					.Union(batch.Messages)
@@ -56,21 +62,17 @@ namespace PubNub.Async.Services.History
 		}
 
 		private async Task<HistoryResponse<TContent>> FetchHistory<TContent>(
-			long? first = null,
-			long? last = null,
-			int? count = null,
-			bool reverse = false,
-			bool includeTime = true)
+			long? first,
+			long? last,
+			int? count,
+			bool reverse,
+			bool includeTime)
 		{
 			var requestUrl = Settings.Host
 				.AppendPathSegments("v2", "history")
 				.AppendPathSegments("sub-key", Settings.SubscribeKey)
 				.AppendPathSegments("channel", Channel.Name)
-				.SetQueryParams(new
-				{
-					pnsdk = Settings.SdkVersion,
-					uuid = Settings.SessionUuid
-				});
+				.SetQueryParam("uuid", Settings.SessionUuid);
 
 			// pubnub's api will, at most and by default, return 100 records.
 			// no need to provide this value if count >= 100
@@ -107,9 +109,16 @@ namespace PubNub.Async.Services.History
 
 		private HistoryResponse<TContent> DeserializeResponse<TContent>(Channel channel, string rawResponse, bool includeTime)
 		{
+			if (string.IsNullOrWhiteSpace(rawResponse))
+			{
+				//TODO: error
+				return null;
+			}
+
 			var array = JArray.Parse(rawResponse);
 			if (!array.HasValues || array.Count != 3)
 			{
+				//TODO: error
 				return null;
 			}
 

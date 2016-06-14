@@ -133,8 +133,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\Access\AccessManagerTests.cs" />
+    <Compile Include="Services\Access\AccessRegistryTests.cs" />
     <Compile Include="Services\Crypto\CryptoServiceTests.cs" />
     <Compile Include="Services\History\HistoryServiceTests.cs" />
+    <Compile Include="Services\Publish\MessageLargerThan32K.cs" />
+    <Compile Include="Services\Publish\PublishServiceTests.cs" />
     <Compile Include="TestFixtureCustomizations.cs" />
   </ItemGroup>
   <ItemGroup>

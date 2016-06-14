@@ -32,5 +32,20 @@
     <Setting Name="HistoryDecryptedHighVolumeChannel" Type="System.String" Scope="Application">
       <Value Profile="(Default)">history-tests-unencrypted.high-volume</Value>
     </Setting>
+    <Setting Name="PublishDecryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">publish-tests-unencrypted</Value>
+    </Setting>
+    <Setting Name="PublishEncryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">publish-tests-encrypted</Value>
+    </Setting>
+    <Setting Name="PamPublishKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">pub-c-bc275f09-c3c1-4cce-b52e-bea8ff9c5b55</Value>
+    </Setting>
+    <Setting Name="PamSubKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sub-c-880a28f4-2e5d-11e6-a01f-0619f8945a4f</Value>
+    </Setting>
+    <Setting Name="PamSecKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sec-c-Y2JkZDM1MWMtNjQyMy00NjJiLTk5NGQtZWIyMTQ5ZTlmYTk0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

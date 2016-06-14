@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Models.History;
+using PubNub.Async.Services.History;
 
 namespace PubNub.Async.Extensions
 {
@@ -11,11 +12,11 @@ namespace PubNub.Async.Extensions
 			long? start = null,
 			long? end = null,
 			int? count = null,
-			bool reverse = false,
+			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
 			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, reverse, includeTime);
+				.History<TContent>(start, end, count, order, includeTime);
 		}
 
 		public static async Task<HistoryResponse<TContent>> History<TContent>(
@@ -23,11 +24,11 @@ namespace PubNub.Async.Extensions
 			long? start = null,
 			long? end = null,
 			int? count = null,
-			bool reverse = false,
+			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
 			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, reverse, includeTime);
+				.History<TContent>(start, end, count, order, includeTime);
 		}
 
 		public static async Task<HistoryResponse<TContent>> History<TContent>(
@@ -35,12 +36,12 @@ namespace PubNub.Async.Extensions
 			long? start = null,
 			long? end = null,
 			int? count = null,
-			bool reverse = false,
+			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
 			return await PubNub.GlobalSettings
 				.HistoryFactory(client)
-				.History<TContent>(start, end, count, reverse, includeTime);
+				.History<TContent>(start, end, count, order, includeTime);
 		}
 	}
 }
