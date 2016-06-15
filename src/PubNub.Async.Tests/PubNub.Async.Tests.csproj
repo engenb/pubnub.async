@@ -133,6 +133,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="PubNubClientTests.cs" />
     <Compile Include="Services\Access\AccessManagerTests.cs" />
     <Compile Include="Services\Access\AccessRegistryTests.cs" />
     <Compile Include="Services\Crypto\CryptoServiceTests.cs" />
