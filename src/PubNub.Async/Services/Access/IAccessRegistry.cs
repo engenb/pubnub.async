@@ -8,7 +8,7 @@ namespace PubNub.Async.Services.Access
 	{
 		Task Register(Channel channel, string authenticationKey, AccessGrantResponse response);
 		Task<AccessGrantResponse> Registration(Channel channel, string authenticationKey);
-		bool InForce(Channel channel, string authenticationKey);
+		bool Granted(Channel channel, string authenticationKey);
 		void Unregister(Channel channel, string authenticationKey);
 	}
 }

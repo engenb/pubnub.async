@@ -44,7 +44,7 @@ namespace PubNub.Async.Services.Access
 			}
 
 			// if access grant is in force, return cached result
-			if (AccessRegistry.InForce(Channel, Settings.AuthenticationKey))
+			if (AccessRegistry.Granted(Channel, Settings.AuthenticationKey))
 			{
 				return await AccessRegistry.Registration(Channel, Settings.AuthenticationKey);
 			}

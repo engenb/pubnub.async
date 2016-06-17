@@ -32,7 +32,7 @@ namespace PubNub.Async.Tests.Services.Access
 			var subject = new AccessRegistry();
 			await subject.Register(channel, authKey, response);
 
-			var result = subject.InForce(channel, authKey);
+			var result = subject.Granted(channel, authKey);
 
 			Assert.True(result);
 		}
@@ -76,7 +76,7 @@ namespace PubNub.Async.Tests.Services.Access
 			var subject = new AccessRegistry();
 			await subject.Register(channel, authKey, response);
 
-			var result = subject.InForce(channel, authKey);
+			var result = subject.Granted(channel, authKey);
 
 			Assert.True(result);
 		}
@@ -102,7 +102,7 @@ namespace PubNub.Async.Tests.Services.Access
 			var subject = new AccessRegistry();
 			await subject.Register(channel, authKey, response);
 
-			var result = subject.InForce(channel, authKey);
+			var result = subject.Granted(channel, authKey);
 
 			Assert.False(result);
 		}
@@ -117,7 +117,7 @@ namespace PubNub.Async.Tests.Services.Access
 
 			var subject = new AccessRegistry();
 
-			var result = subject.InForce(channel, authKey);
+			var result = subject.Granted(channel, authKey);
 
 			Assert.False(result);
 		}

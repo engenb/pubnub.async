@@ -41,7 +41,7 @@ namespace PubNub.Async.Services.Access
 				: null;
 		}
 
-		public bool InForce(Channel channel, string authenticationKey)
+		public bool Granted(Channel channel, string authenticationKey)
 		{
 			var key = KeyFor(channel, authenticationKey);
 			return ExpirationRegistry.ContainsKey(key) && ExpirationRegistry[key] > DateTime.UtcNow.Ticks;

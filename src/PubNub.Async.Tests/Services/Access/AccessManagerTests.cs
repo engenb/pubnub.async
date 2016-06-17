@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Flurl.Http;
-using Flurl.Http.Configuration;
 using Flurl.Http.Testing;
 using Moq;
 using Newtonsoft.Json;
@@ -49,7 +44,7 @@ namespace PubNub.Async.Tests.Services.Access
 
 			var mockRegistry = new Mock<IAccessRegistry>();
 			mockRegistry
-				.Setup(x => x.InForce(channel, authKey))
+				.Setup(x => x.Granted(channel, authKey))
 				.Returns(true);
 			mockRegistry
 				.Setup(x => x.Registration(channel, authKey))
@@ -92,7 +87,7 @@ namespace PubNub.Async.Tests.Services.Access
 
 			var mockRegistry = new Mock<IAccessRegistry>();
 			mockRegistry
-				.Setup(x => x.InForce(channel, authKey))
+				.Setup(x => x.Granted(channel, authKey))
 				.Returns(false);
 			
 			var subject = new AccessManager(client, mockRegistry.Object);
