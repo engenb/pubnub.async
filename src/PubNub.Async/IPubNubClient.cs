@@ -7,9 +7,9 @@ namespace PubNub.Async
 	public interface IPubNubClient
 	{
 		Channel Channel { get; }
-		IPubNubSettings Settings { get; }
+		IPubNubEnvironment Environment { get; }
 
-		IPubNubClient ConfigurePubNub(Action<IPubNubSettings> action);
+		IPubNubClient ConfigurePubNub(Action<IPubNubEnvironment> action);
 
 		IPubNubClient Encrypted();
 		IPubNubClient EncryptedWith(string cipher);

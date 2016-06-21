@@ -13,13 +13,14 @@ namespace PubNub.Async.Autofac
 		protected override void Load(ContainerBuilder builder)
 		{
 			builder
-				.RegisterType<PubNubSettingsBootstrapper>()
-				.AsImplementedInterfaces()
+				.RegisterType<PubNubAutofacBootstrapper>()
+				.As<IStartable>()
 				.SingleInstance();
 
 			builder
-				.RegisterType<PubNubAutofacSettings>()
-				.As<IPubNubSettings>();
+				.RegisterType<PubNubAutofacEnvironment>()
+				.As<IPubNubEnvironment>()
+				.SingleInstance();
 
 			builder
 				.RegisterType<CryptoService>()
@@ -35,12 +36,14 @@ namespace PubNub.Async.Autofac
 				.RegisterType<AccessManager>()
 				.As<IAccessManager>();
 
+			// ensure that all dependent services have the same client instance
 			builder
 				.Register<IHistoryService>((c, p) =>
 				{
 					var context = c.Resolve<IComponentContext>();
 
 					var client = p.TypedAs<IPubNubClient>();
+					if(client == null) throw new InvalidOperationException($"{typeof(IPubNubClient).Name} is required to resolve ${typeof(IHistoryService).Name}");
 					var access = context.Resolve<Func<IPubNubClient, IAccessManager>>();
 
 					return new HistoryService(client, c.Resolve<ICryptoService>(), access(client));
@@ -52,6 +55,7 @@ namespace PubNub.Async.Autofac
 					var context = c.Resolve<IComponentContext>();
 
 					var client = p.TypedAs<IPubNubClient>();
+					if (client == null) throw new InvalidOperationException($"{typeof(IPubNubClient).Name} is required to resolve ${typeof(IPublishService).Name}");
 					var access = context.Resolve<Func<IPubNubClient, IAccessManager>>();
 
 					return new PublishService(client, c.Resolve<ICryptoService>(), access(client));

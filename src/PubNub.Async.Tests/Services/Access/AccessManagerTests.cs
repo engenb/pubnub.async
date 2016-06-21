@@ -6,12 +6,12 @@ using Flurl.Http.Testing;
 using Moq;
 using Newtonsoft.Json;
 using Ploeh.AutoFixture;
-using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Services.Access;
-using PubNub.Async.Tests.Properties;
+using PubNub.Async.Tests.Common;
+using PubNub.Async.Tests.Common.Properties;
 using Xunit;
 
 namespace PubNub.Async.Tests.Services.Access
@@ -102,7 +102,7 @@ namespace PubNub.Async.Tests.Services.Access
 					.ShouldHaveCalled($"https://pubsub.pubnub.com/v1/auth/grant/sub-key/{subKey}")
 					.WithVerb(HttpMethod.Get)
 					.With(c => c.Request.RequestUri.Query.Contains($"channel={channel.Name}"))
-					.With(c => c.Request.RequestUri.Query.Contains($"uuid={client.Settings.SessionUuid}"))
+					.With(c => c.Request.RequestUri.Query.Contains($"uuid={client.Environment.SessionUuid}"))
 					.With(c => c.Request.RequestUri.Query.Contains("timestamp="))
 					.With(c => c.Request.RequestUri.Query.Contains($"r={1}"))
 					.With(c => c.Request.RequestUri.Query.Contains($"w={1}"))
@@ -117,7 +117,7 @@ namespace PubNub.Async.Tests.Services.Access
 			}
 		}
 
-		[Fact(Skip = "L&L")]
+		[Fact]
 		[Trait("Category", "integration")]
 		public async Task Establish__Given_ChannelAndConfiguredClient__When_Unregistered__Then_GrantRequestAndRegisterResponse()
 		{

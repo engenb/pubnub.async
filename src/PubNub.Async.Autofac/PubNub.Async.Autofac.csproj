@@ -44,10 +44,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AutofacExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PubNubAutofacSettings.cs" />
+    <Compile Include="PubNubAutofacBootstrapper.cs" />
+    <Compile Include="PubNubAutofacEnvironment.cs" />
     <Compile Include="PubNubAsyncModule.cs" />
-    <Compile Include="PubNubSettingsBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">

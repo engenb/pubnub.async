@@ -58,8 +58,8 @@
       <HintPath>..\packages\Flurl.Http.0.10.1\lib\net45\Flurl.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.5.8.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.5.8\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.9.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.9\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -86,12 +86,12 @@
       <HintPath>..\packages\PInvoke.Windows.Core.0.3.2\lib\portable-net45+win+wpa81+MonoAndroid10+xamarinios10+MonoTouch10\PInvoke.Windows.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.47.4.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.3.47.4\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.47.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.47.4.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.AutoMoq.3.47.4\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoMoq.3.47.8\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -126,34 +126,29 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AbstractTest.cs" />
+    <Compile Include="Models\Channel\ChannelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="PubNubClientTests.cs" />
+    <Compile Include="PubNubTests.cs" />
     <Compile Include="Services\Access\AccessManagerTests.cs" />
     <Compile Include="Services\Access\AccessRegistryTests.cs" />
     <Compile Include="Services\Crypto\CryptoServiceTests.cs" />
     <Compile Include="Services\History\HistoryServiceTests.cs" />
     <Compile Include="Services\Publish\MessageLargerThan32K.cs" />
     <Compile Include="Services\Publish\PublishServiceTests.cs" />
-    <Compile Include="TestFixtureCustomizations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PubNub.Async.Testing\PubNub.Async.Testing.csproj">
       <Project>{957e99dc-ba52-46c4-98e1-9d50445a4b7e}</Project>
       <Name>PubNub.Async.Testing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PubNub.Async.Tests.Common\PubNub.Async.Tests.Common.csproj">
+      <Project>{BF42A1D5-95BE-4346-8053-B842BC22C222}</Project>
+      <Name>PubNub.Async.Tests.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\PubNub.Async\PubNub.Async.csproj">
       <Project>{febf07a0-0bb0-4a33-b216-822d0325ced2}</Project>

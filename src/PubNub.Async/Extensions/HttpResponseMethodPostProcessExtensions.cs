@@ -5,9 +5,9 @@ namespace PubNub.Async.Extensions
 {
 	public static class HttpResponseMethodPostProcessExtensions
 	{
-		public static async Task<HttpResponseMessage> ProcessResponse(this Task<HttpResponseMessage> responseTask)
+		public static async Task<HttpResponseMessage> ProcessResponse(this Task<HttpResponseMessage> response)
 		{
-			return (await responseTask.ConfigureAwait(false))
+			return (await response.ConfigureAwait(false))
 				.StripCharsetQuotes();
 		}
 

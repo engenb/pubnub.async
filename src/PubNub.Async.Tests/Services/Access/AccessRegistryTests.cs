@@ -5,6 +5,7 @@ using Ploeh.AutoFixture;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Services.Access;
+using PubNub.Async.Tests.Common;
 using Xunit;
 
 namespace PubNub.Async.Tests.Services.Access

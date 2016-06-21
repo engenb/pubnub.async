@@ -5,18 +5,18 @@ namespace PubNub.Async.Testing
 {
 	public class PubNubTest : IDisposable
 	{
-		public PubNubTest() : this(new TestablePubNubSettings())
+		public PubNubTest() : this(new TestablePubNubEnvironment())
 		{
 		}
 
-		public PubNubTest(IPubNubSettings settings)
+		public PubNubTest(IPubNubEnvironment environment)
 		{
-			PubNub.Settings = new Lazy<IPubNubSettings>(() => settings);
+			PubNub.InternalEnvironment = new Lazy<IPubNubEnvironment>(() => environment);
 		}
 
 		public void Dispose()
 		{
-			PubNub.GlobalSettings.Reset();
+			PubNub.Environment.Reset();
 		}
 	}
 }

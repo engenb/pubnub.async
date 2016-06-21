@@ -39,9 +39,10 @@ namespace PubNub.Async.Extensions
 			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
-			return await PubNub.GlobalSettings
-				.HistoryFactory(client)
-				.History<TContent>(start, end, count, order, includeTime);
+			return await PubNub.Environment
+				.Resolve<IHistoryService>(client)
+				.History<TContent>(start, end, count, order, includeTime)
+				.ConfigureAwait(false);
 		}
 	}
 }

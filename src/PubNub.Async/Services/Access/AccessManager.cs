@@ -18,14 +18,14 @@ namespace PubNub.Async.Services.Access
 	{
 		private IAccessRegistry AccessRegistry { get; }
 
-		private IPubNubSettings Settings { get; }
+		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
 
 		public AccessManager(IPubNubClient client, IAccessRegistry accessRegistry)
 		{
 			AccessRegistry = accessRegistry;
 
-			Settings = client.Settings;
+			Environment = client.Environment;
 			Channel = client.Channel;
 		}
 
@@ -34,7 +34,7 @@ namespace PubNub.Async.Services.Access
 			//TODO - handle r/w/rw
 			access = AccessType.ReadWrite;
 
-			if (string.IsNullOrWhiteSpace(Settings.SecretKey))
+			if (string.IsNullOrWhiteSpace(Environment.SecretKey))
 			{
 				throw new InvalidOperationException("PubNubClient must be configured with secret key in order to establish access");
 			}
@@ -44,51 +44,51 @@ namespace PubNub.Async.Services.Access
 			}
 
 			// if access grant is in force, return cached result
-			if (AccessRegistry.Granted(Channel, Settings.AuthenticationKey))
+			if (AccessRegistry.Granted(Channel, Environment.AuthenticationKey))
 			{
-				return await AccessRegistry.Registration(Channel, Settings.AuthenticationKey);
+				return await AccessRegistry.Registration(Channel, Environment.AuthenticationKey);
 			}
 
 			// I have experimented with this a bit, and the ORDER of params in the url appears to matter...
-			var requestUrl = Settings.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegments("v1", "auth", "grant")
-				.AppendPathSegments("sub-key", Settings.SubscribeKey);
+				.AppendPathSegments("sub-key", Environment.SubscribeKey);
 
-			if (!string.IsNullOrWhiteSpace(Settings.AuthenticationKey))
+			if (!string.IsNullOrWhiteSpace(Environment.AuthenticationKey))
 			{
-				requestUrl.SetQueryParam("auth", Settings.AuthenticationKey);
+				requestUrl.SetQueryParam("auth", Environment.AuthenticationKey);
 			}
 
 			requestUrl
 				.SetQueryParam("channel", Channel.Name)
-				//.SetQueryParam("pnsdk", Settings.SdkVersion)
+				//.SetQueryParam("pnsdk", Environment.SdkVersion)
 				.SetQueryParam("r", Convert.ToInt32(access.GrantsRead()))
 				.SetQueryParam("timestamp", SecondsSinceEpoch(DateTime.UtcNow));
 
-			if (Settings.MinutesToTimeout != null)
+			if (Environment.MinutesToTimeout != null)
 			{
-				requestUrl.SetQueryParam("ttl", Settings.MinutesToTimeout.Value);
+				requestUrl.SetQueryParam("ttl", Environment.MinutesToTimeout.Value);
 			}
 
 			requestUrl
-				.SetQueryParam("uuid", Settings.SessionUuid)
+				.SetQueryParam("uuid", Environment.SessionUuid)
 				.SetQueryParam("w", Convert.ToInt32(access.GrantsWrite()));
 
 			//encode signature
 			var signature = string.Join("\n",
-				Settings.SubscribeKey,
-				Settings.PublishKey,
+				Environment.SubscribeKey,
+				Environment.PublishKey,
 				"grant",
 				requestUrl.Query);
-			requestUrl.SetQueryParam("signature", Sign(Settings.SecretKey, signature), true);
+			requestUrl.SetQueryParam("signature", Sign(Environment.SecretKey, signature), true);
 
-			var responseMessage = await requestUrl.GetAsync();
+			var rawResponse = await requestUrl.GetAsync()
+				.ProcessResponse()
+				.ReceiveString();
 
-			var response = await DeserializeResponse(responseMessage);
-
-			//TODO: handle error
-
-			await AccessRegistry.Register(Channel, Settings.AuthenticationKey, response);
+			var response = DeserializeResponse(rawResponse);
+			
+			await AccessRegistry.Register(Channel, Environment.AuthenticationKey, response);
 			return response;
 		}
 
@@ -119,13 +119,9 @@ namespace PubNub.Async.Services.Access
 				.Replace('/', '_');
 		}
 
-		private async Task<AccessGrantResponse> DeserializeResponse(HttpResponseMessage response)
+		private AccessGrantResponse DeserializeResponse(string rawResponse)
 		{
-			var rawContent = await response
-				.StripCharsetQuotes()
-				.Content
-				.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<AccessGrantResponse>(rawContent);
+			return JsonConvert.DeserializeObject<AccessGrantResponse>(rawResponse);
 		}
 	}
 }

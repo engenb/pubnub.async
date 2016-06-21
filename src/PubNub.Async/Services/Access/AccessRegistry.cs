@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -19,8 +20,8 @@ namespace PubNub.Async.Services.Access
 
 		public AccessRegistry()
 		{
-			ExpirationRegistry = new Dictionary<string, long>();
-			ResponseRegistry = new Dictionary<string, byte[]>();
+			ExpirationRegistry = new ConcurrentDictionary<string, long>();
+			ResponseRegistry = new ConcurrentDictionary<string, byte[]>();
 
 			//TODO: launch thread to clean registry (expired grant responses)
 		}

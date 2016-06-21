@@ -18,7 +18,7 @@ namespace PubNub.Async.Services.Publish
 		private ICryptoService Crypto { get; }
 		private IAccessManager Access { get; }
 
-		private IPubNubSettings Settings { get; }
+		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
 
 		public PublishService(
@@ -26,7 +26,7 @@ namespace PubNub.Async.Services.Publish
 			ICryptoService crypto,
 			IAccessManager access)
 		{
-			Settings = client.Settings;
+			Environment = client.Environment;
 			Channel = client.Channel;
 
 			Crypto = crypto;
@@ -48,33 +48,33 @@ namespace PubNub.Async.Services.Publish
 
 			if (Channel.Encrypted)
 			{
-				msg = Crypto.Encrypt(Channel.Cipher ?? Settings.CipherKey, msg);
+				msg = Crypto.Encrypt(Channel.Cipher ?? Environment.CipherKey, msg);
 				msg = JsonConvert.SerializeObject(msg);
 			}
 
 			var signature = "0";
-			if (!string.IsNullOrWhiteSpace(Settings.SecretKey))
+			if (!string.IsNullOrWhiteSpace(Environment.SecretKey))
 			{
-				var uri = Settings.PublishKey.AppendPathSegments(
-					Settings.SubscribeKey,
-					Settings.SecretKey,
+				var uri = Environment.PublishKey.AppendPathSegments(
+					Environment.SubscribeKey,
+					Environment.SecretKey,
 					Channel.Name,
 					msg);
 				signature = Crypto.Hash(uri, HashAlgorithm.Md5);
 			}
 
-			var requestUrl = Settings.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegment("publish")
-				.AppendPathSegments(Settings.PublishKey, Settings.SubscribeKey)
+				.AppendPathSegments(Environment.PublishKey, Environment.SubscribeKey)
 				.AppendPathSegment(signature)
 				.AppendPathSegment(Channel.Name)
 				.AppendPathSegment("0") // "callback" according to pn api - not sure what this is for, but always "0" from PubnubCore.cs
 				.AppendPathSegment(msg)
-				.SetQueryParam("uuid", Settings.SessionUuid);
+				.SetQueryParam("uuid", Environment.SessionUuid);
 
-			if (!string.IsNullOrWhiteSpace(Settings.AuthenticationKey))
+			if (!string.IsNullOrWhiteSpace(Environment.AuthenticationKey))
 			{
-				requestUrl.SetQueryParam("auth", Settings.AuthenticationKey);
+				requestUrl.SetQueryParam("auth", Environment.AuthenticationKey);
 			}
 			if (!recordHistory)
 			{

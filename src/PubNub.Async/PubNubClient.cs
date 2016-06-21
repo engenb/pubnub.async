@@ -6,7 +6,7 @@ namespace PubNub.Async
 {
 	public class PubNubClient : IPubNubClient
 	{
-		public IPubNubSettings Settings { get; }
+		public IPubNubEnvironment Environment { get; }
 		public Channel Channel { get; }
 		
 		public PubNubClient(string channel) : this(new Channel(channel))
@@ -15,13 +15,13 @@ namespace PubNub.Async
 
 		public PubNubClient(Channel channel)
 		{
-			Settings = PubNub.GlobalSettings.Clone();
+			Environment = PubNub.Environment.Clone();
 			Channel = channel;
 		}
 
-		public IPubNubClient ConfigurePubNub(Action<IPubNubSettings> action)
+		public IPubNubClient ConfigurePubNub(Action<IPubNubEnvironment> action)
 		{
-			action(Settings);
+			action(Environment);
 			return this;
 		}
 
@@ -41,15 +41,15 @@ namespace PubNub.Async
 		public IPubNubClient Secured(int? minutesToTimeout = null)
 		{
 			Channel.Secured = true;
-			Settings.MinutesToTimeout = minutesToTimeout;
+			Environment.MinutesToTimeout = minutesToTimeout;
 			return this;
 		}
 
 		public IPubNubClient SecuredWith(string authenticationKey, int? minutesToTimeout = null)
 		{
 			Channel.Secured = true;
-			Settings.AuthenticationKey = authenticationKey;
-			Settings.MinutesToTimeout = minutesToTimeout;
+			Environment.AuthenticationKey = authenticationKey;
+			Environment.MinutesToTimeout = minutesToTimeout;
 			return this;
 		}
 	}

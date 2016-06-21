@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PubNub.Async.Autofac\PubNub.Async.Autofac.csproj">
-      <Project>{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}</Project>
+      <Project>{d0d06c72-da81-417f-8c8f-f11c85c42fc4}</Project>
       <Name>PubNub.Async.Autofac</Name>
     </ProjectReference>
     <ProjectReference Include="..\PubNub.Async\PubNub.Async.csproj">

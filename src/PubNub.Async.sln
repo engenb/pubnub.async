@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A7AB9C72-ADCF-485F-8043-37B117EE7780}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~Tests", "~Tests", "{A7AB9C72-ADCF-485F-8043-37B117EE7780}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Tests", "PubNub.Async.Tests\PubNub.Async.Tests.csproj", "{F9A1A685-CD1D-433A-B0B9-2F65CE593C55}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{337A4B12-D203-4C24-9EBA-2C88B218ECFA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~Solution Items", "~Solution Items", "{337A4B12-D203-4C24-9EBA-2C88B218ECFA}"
 	ProjectSection(SolutionItems) = preProject
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 		SharedAssemblyVersionInfo.cs = SharedAssemblyVersionInfo.cs
@@ -20,6 +20,22 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Autofac", "PubNub.Async.Autofac\PubNub.Async.Autofac.csproj", "{D0D06C72-DA81-417F-8C8F-F11C85C42FC4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Autofac.Tests", "PubNub.Async.Autofac.Tests\PubNub.Async.Autofac.Tests.csproj", "{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Push", "PubNub.Async.Push\PubNub.Async.Push.csproj", "{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{98D691E8-8BA0-4E82-8E1F-45FBCF2FF5FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Push", "Push", "{21D58334-C5A0-4707-9294-92C20C035C26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Push.Autofac", "PubNub.Async.Push.Autofac\PubNub.Async.Push.Autofac.csproj", "{2C1FA67E-89B8-4553-AE4E-2110713C89D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{FA0CE46C-75F1-4EB9-93DA-5AB179418BF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Push.Tests", "PubNub.Async.Push.Tests\PubNub.Async.Push.Tests.csproj", "{15520916-D7D1-4034-8EDE-F7B3825BBBFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Push", "Push", "{2C0D7287-F87E-412F-B0D1-5BC1439AEFEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Tests.Common", "PubNub.Async.Tests.Common\PubNub.Async.Tests.Common.csproj", "{BF42A1D5-95BE-4346-8053-B842BC22C222}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +63,22 @@ Global
 		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C1FA67E-89B8-4553-AE4E-2110713C89D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C1FA67E-89B8-4553-AE4E-2110713C89D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C1FA67E-89B8-4553-AE4E-2110713C89D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C1FA67E-89B8-4553-AE4E-2110713C89D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15520916-D7D1-4034-8EDE-F7B3825BBBFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15520916-D7D1-4034-8EDE-F7B3825BBBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15520916-D7D1-4034-8EDE-F7B3825BBBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15520916-D7D1-4034-8EDE-F7B3825BBBFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF42A1D5-95BE-4346-8053-B842BC22C222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF42A1D5-95BE-4346-8053-B842BC22C222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF42A1D5-95BE-4346-8053-B842BC22C222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF42A1D5-95BE-4346-8053-B842BC22C222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +86,12 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F9A1A685-CD1D-433A-B0B9-2F65CE593C55} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
 		{E47FD4A0-5E7C-41D5-9E7B-7836DD7184EB} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
+		{BE38930D-65D4-4B71-BDAE-45D5EE1E28AB} = {21D58334-C5A0-4707-9294-92C20C035C26}
+		{21D58334-C5A0-4707-9294-92C20C035C26} = {98D691E8-8BA0-4E82-8E1F-45FBCF2FF5FD}
+		{2C1FA67E-89B8-4553-AE4E-2110713C89D3} = {21D58334-C5A0-4707-9294-92C20C035C26}
+		{FA0CE46C-75F1-4EB9-93DA-5AB179418BF0} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
+		{15520916-D7D1-4034-8EDE-F7B3825BBBFA} = {2C0D7287-F87E-412F-B0D1-5BC1439AEFEC}
+		{2C0D7287-F87E-412F-B0D1-5BC1439AEFEC} = {FA0CE46C-75F1-4EB9-93DA-5AB179418BF0}
+		{BF42A1D5-95BE-4346-8053-B842BC22C222} = {A7AB9C72-ADCF-485F-8043-37B117EE7780}
 	EndGlobalSection
 EndGlobal

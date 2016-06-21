@@ -18,7 +18,7 @@ namespace PubNub.Async.Services.History
 		private ICryptoService Crypto { get; }
 		private IAccessManager Access { get; }
 
-		private IPubNubSettings Settings { get; }
+		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
 
 		public HistoryService(IPubNubClient client, ICryptoService crypto, IAccessManager access)
@@ -26,7 +26,7 @@ namespace PubNub.Async.Services.History
 			Crypto = crypto;
 			Access = access;
 
-			Settings = client.Settings;
+			Environment = client.Environment;
 			Channel = client.Channel;
 		}
 
@@ -68,11 +68,11 @@ namespace PubNub.Async.Services.History
 			bool reverse,
 			bool includeTime)
 		{
-			var requestUrl = Settings.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegments("v2", "history")
-				.AppendPathSegments("sub-key", Settings.SubscribeKey)
+				.AppendPathSegments("sub-key", Environment.SubscribeKey)
 				.AppendPathSegments("channel", Channel.Name)
-				.SetQueryParam("uuid", Settings.SessionUuid);
+				.SetQueryParam("uuid", Environment.SessionUuid);
 
 			// pubnub's api will, at most and by default, return 100 records.
 			// no need to provide this value if count >= 100
@@ -96,9 +96,9 @@ namespace PubNub.Async.Services.History
 			{
 				requestUrl.SetQueryParam("end", last);
 			}
-			if (!string.IsNullOrWhiteSpace(Settings.AuthenticationKey))
+			if (!string.IsNullOrWhiteSpace(Environment.AuthenticationKey))
 			{
-				requestUrl.SetQueryParam("auth", Settings.AuthenticationKey);
+				requestUrl.SetQueryParam("auth", Environment.AuthenticationKey);
 			}
 			var rawResponse = await requestUrl.GetAsync()
 				.ProcessResponse()
@@ -141,7 +141,7 @@ namespace PubNub.Async.Services.History
 				Newest = end,
 				Messages = messages.Children()
 					.Select(x => channel.Encrypted
-						? Decrypt<TContent>(x, channel.Cipher ?? Settings.CipherKey, includeTime)
+						? Decrypt<TContent>(x, channel.Cipher ?? Environment.CipherKey, includeTime)
 						: DeserializeRecord<TContent>(x, includeTime))
 					.ToArray()
 			};

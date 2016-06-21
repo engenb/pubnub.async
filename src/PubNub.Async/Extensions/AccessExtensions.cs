@@ -21,9 +21,10 @@ namespace PubNub.Async.Extensions
 
 		public static async Task<AccessGrantResponse> Grant(this IPubNubClient client, AccessType access)
 		{
-			return await PubNub.GlobalSettings
-				.AccessFactory(client)
-				.Establish(access);
+			return await PubNub.Environment
+				.Resolve<IAccessManager>(client)
+				.Establish(access)
+				.ConfigureAwait(false);
 		}
 	}
 }
