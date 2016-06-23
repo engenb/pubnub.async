@@ -39,7 +39,7 @@ namespace PubNub.Async.Push.Services
 
             var requestUrl = BuildDeviceUrl(type, token, "add");
             var result = await requestUrl
-                .ConfigureClient(s => s.AllowedHttpStatusRange = "*")
+                .ConfigureClient(s => s.AllowedHttpStatusRange = "403")
                 .GetAsync()
                 .ProcessResponse()
                 .ReceiveString();
@@ -58,6 +58,7 @@ namespace PubNub.Async.Push.Services
             var result = await requestUrl
                 .ConfigureClient(s => s.AllowedHttpStatusRange = "403")
                 .GetAsync()
+                .ProcessResponse()
                 .ReceiveString();
 
             return ParseDeviceResult(result);
@@ -127,7 +128,7 @@ namespace PubNub.Async.Push.Services
         {
             var response = new PushResponse
             {
-                Message = "Unknown error occurred while attempting to register device"
+                Message = "Unknown error occurred while attempting to modify device registration"
             };
 
             if (result != null)
