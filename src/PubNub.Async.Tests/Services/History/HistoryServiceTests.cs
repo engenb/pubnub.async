@@ -17,33 +17,6 @@ namespace PubNub.Async.Tests.Services.History
 	public class HistoryServiceTests : AbstractTest
 	{
 		[Fact]
-		public async Task History__Given_ConfiguredPubNub__When_SSLOff__Then_Http()
-		{
-			var client = "channel"
-				.ConfigurePubNub(c =>
-				{
-					c.SubscribeKey = Settings.Default.NoFeaturesSubscribeKey;
-					c.SslEnabled = false;
-				});
-
-			var mockCrypto = new Mock<ICryptoService>();
-			var mockAccess = new Mock<IAccessManager>();
-
-			var subject = new HistoryService(client, mockCrypto.Object, mockAccess.Object);
-
-			using(var httpTest = new HttpTest())
-			{
-				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
-
-				await subject.History<HistoryTestMessage>();
-
-				httpTest.ShouldHaveCalled("http://*")
-					.WithVerb(HttpMethod.Get)
-					.Times(1);
-			}
-		}
-
-		[Fact]
 		public async Task History__Given_ConfiguredPubNub__When_SSLOn__Then_Https()
 		{
 			var client = "channel"
@@ -65,6 +38,33 @@ namespace PubNub.Async.Tests.Services.History
 				await subject.History<HistoryTestMessage>();
 
 				httpTest.ShouldHaveCalled("https://*")
+					.WithVerb(HttpMethod.Get)
+					.Times(1);
+			}
+		}
+
+		[Fact]
+		public async Task History__Given_ConfiguredPubNub__When_SSLOff__Then_Http()
+		{
+			var client = "channel"
+				.ConfigurePubNub(c =>
+				{
+					c.SubscribeKey = Settings.Default.NoFeaturesSubscribeKey;
+					c.SslEnabled = false;
+				});
+
+			var mockCrypto = new Mock<ICryptoService>();
+			var mockAccess = new Mock<IAccessManager>();
+
+			var subject = new HistoryService(client, mockCrypto.Object, mockAccess.Object);
+
+			using(var httpTest = new HttpTest())
+			{
+				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
+
+				await subject.History<HistoryTestMessage>();
+
+				httpTest.ShouldHaveCalled("http://*")
 					.WithVerb(HttpMethod.Get)
 					.Times(1);
 			}
@@ -193,6 +193,7 @@ namespace PubNub.Async.Tests.Services.History
 		}
 
 		[Fact]
+		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNub__When_Count250__Then_Fetch250InChronologicalOrder()
 		{
 			var expectedCount = 250;

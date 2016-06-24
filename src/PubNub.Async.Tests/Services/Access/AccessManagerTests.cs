@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Moq;
 using Newtonsoft.Json;
 using Ploeh.AutoFixture;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Services.Access;
@@ -29,11 +31,12 @@ namespace PubNub.Async.Tests.Services.Access
 		[Fact]
 		public async Task Establish__Given_ChannelAndConfiguredClient__When_PreviouslyRegistered__Then_ReturnCachedResponse()
 		{
-			var expected = Fixture.Create<AccessGrantResponse>();
+			var expected = Fixture.Create<GrantResponse>();
 
+			var access = AccessType.ReadWrite;
 			var channel = new Channel("channel");
-			var secKey = Guid.NewGuid().ToString();
-			var authKey = Guid.NewGuid().ToString();
+			var secKey = Fixture.Create<string>();
+			var authKey = Fixture.Create<string>();
 
 			var client = channel
 				.ConfigurePubNub(x =>
@@ -44,15 +47,15 @@ namespace PubNub.Async.Tests.Services.Access
 
 			var mockRegistry = new Mock<IAccessRegistry>();
 			mockRegistry
-				.Setup(x => x.Granted(channel, authKey))
+				.Setup(x => x.Granted(channel, authKey, access))
 				.Returns(true);
 			mockRegistry
-				.Setup(x => x.Registration(channel, authKey))
+				.Setup(x => x.CachedRegistration(channel, authKey))
 				.ReturnsAsync(expected);
 
 			var subject = new AccessManager(client, mockRegistry.Object);
 
-			var result = await subject.Establish(AccessType.ReadWrite);
+			var result = await subject.Establish(access);
 
 			Assert.Same(expected, result);
 		}
@@ -60,21 +63,36 @@ namespace PubNub.Async.Tests.Services.Access
 		[Fact]
 		public async Task Establish__Given_ChannelAndConfiguredClient__When_Unregistered__Then_GrantAndRegisterResponse()
 		{
+			var authKey = Fixture.Create<string>();
+			var channelName = Fixture.Create<string>();
+			var access = AccessType.ReadWrite;
+			var pubKey = Fixture.Create<string>();
+			var subKey = Fixture.Create<string>();
+			var secKey = Fixture.Create<string>();
+			var channel = new Channel(channelName);
+
 			var paylaod = Fixture
-				.Build<AccessGrantResponsePayload>()
+				.Build<PubNubGrantResponsePayload>()
 				.With(x => x.MintuesToExpire, 5)
+				.With(x => x.Auths, new Dictionary<string, PubNubGrantResponseAuths>
+				{
+					{ authKey, new PubNubGrantResponseAuths {Read = true, Write = true} }
+				})
 				.Create();
 
-			var expected = Fixture
-				.Build<AccessGrantResponse>()
+			var pnResponse = Fixture
+				.Build<PubNubGrantResponse>()
+				.With(x => x.Status, HttpStatusCode.OK)
 				.With(x => x.Paylaod, paylaod)
 				.Create();
 
-			var pubKey = Guid.NewGuid().ToString();
-			var subKey = Guid.NewGuid().ToString();
-			var secKey = Guid.NewGuid().ToString();
-			var channel = new Channel("test-channel");
-			var authKey = Guid.NewGuid().ToString();
+			var expectedResult = new GrantResponse
+			{
+				Success = true,
+				Message = pnResponse.Message,
+				MinutesToExpire = pnResponse.Paylaod.MintuesToExpire,
+				Access = access,
+			};
 
 			var client = channel
 				.ConfigurePubNub(x =>
@@ -87,16 +105,16 @@ namespace PubNub.Async.Tests.Services.Access
 
 			var mockRegistry = new Mock<IAccessRegistry>();
 			mockRegistry
-				.Setup(x => x.Granted(channel, authKey))
+				.Setup(x => x.Granted(channel, authKey, access))
 				.Returns(false);
 			
 			var subject = new AccessManager(client, mockRegistry.Object);
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(expected);
+				httpTest.RespondWithJson(pnResponse);
 
-				var result = await subject.Establish(AccessType.ReadWrite);
+				var result = await subject.Establish(access);
 
 				httpTest
 					.ShouldHaveCalled($"https://pubsub.pubnub.com/v1/auth/grant/sub-key/{subKey}")
@@ -111,7 +129,7 @@ namespace PubNub.Async.Tests.Services.Access
 					.With(c => !c.Request.RequestUri.Query.Contains("ttl="))
 					.Times(1);
 				
-				Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(result));
+				Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(result));
 
 				mockRegistry.Verify(x => x.Register(channel, authKey, result));
 			}
@@ -119,8 +137,12 @@ namespace PubNub.Async.Tests.Services.Access
 
 		[Fact]
 		[Trait("Category", "integration")]
-		public async Task Establish__Given_ChannelAndConfiguredClient__When_Unregistered__Then_GrantRequestAndRegisterResponse()
+		public async Task Establish__Given_ChannelAndConfiguredClient__When_UnregisteredNoTTL__Then_GrantRequestAndRegisterResponse()
 		{
+			var expectedMessage = "Success";
+			var expectedMinutesToExpire = 1440; //pn default
+			var expectedAccess = AccessType.ReadWrite;
+
 			var authKey = "test-auth";
 
 			var response = await "test-channel"
@@ -134,7 +156,10 @@ namespace PubNub.Async.Tests.Services.Access
 				.SecuredWith(authKey)
 				.Grant(AccessType.ReadWrite);
 
-			Assert.Equal(HttpStatusCode.OK, response.Status);
+			Assert.True(response.Success);
+			Assert.Equal(expectedMessage, response.Message);
+			Assert.Equal(expectedMinutesToExpire, response.MinutesToExpire);
+			Assert.Equal(expectedAccess, response.Access);
 		}
 	}
 }

@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 namespace PubNub.Async.Models.Access
 {
-	public class AccessGrantResponse
+	public class PubNubGrantResponse
 	{
 		[JsonProperty("status")]
 		public HttpStatusCode Status { get; set; }
 		[JsonProperty("message")]
 		public string Message { get; set; }
 		[JsonProperty("payload")]
-		public AccessGrantResponsePayload Paylaod { get; set; }
+		public PubNubGrantResponsePayload Paylaod { get; set; }
 		[JsonProperty("service")]
 		public string Service { get; set; }
 	}

@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl.Util;
 using Newtonsoft.Json;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
@@ -15,42 +16,58 @@ namespace PubNub.Async.Services.Access
 	{
 		//TODO: this registry could potentially get very large/bloated
 		//TODO: maybe make this more robust with some sort of cache impl
-		private IDictionary<string, long> ExpirationRegistry { get; }
+		private IDictionary<string, AccessRegistration> Registry { get; }
 		private IDictionary<string, byte[]> ResponseRegistry { get; }
 
 		public AccessRegistry()
 		{
-			ExpirationRegistry = new ConcurrentDictionary<string, long>();
+			Registry = new ConcurrentDictionary<string, AccessRegistration>();
 			ResponseRegistry = new ConcurrentDictionary<string, byte[]>();
 
 			//TODO: launch thread to clean registry (expired grant responses)
 		}
 
-		public async Task Register(Channel channel, string authenticationKey, AccessGrantResponse response)
+		public async Task Register(Channel channel, string authenticationKey, GrantResponse grant)
 		{
 			var key = KeyFor(channel, authenticationKey);
-			var expiration = DateTime.UtcNow.AddMinutes(response.Paylaod.MintuesToExpire).Ticks;
-			ExpirationRegistry[key] = expiration;
-			ResponseRegistry[key] = await Compress(JsonConvert.SerializeObject(response));
+			var expiration = DateTime.UtcNow.AddMinutes(grant.MinutesToExpire).Ticks;
+
+			Registry[key] = new AccessRegistration
+			{
+				ReadExpires = grant.Access.GrantsRead() ? expiration : (long?)null,
+				WriteExpires = grant.Access.GrantsWrite() ? expiration : (long?)null
+			};
+			ResponseRegistry[key] = await Compress(JsonConvert.SerializeObject(grant));
 		}
 
-		public async Task<AccessGrantResponse> Registration(Channel channel, string authenticationKey)
+		public async Task<GrantResponse> CachedRegistration(Channel channel, string authenticationKey)
 		{
 			var key = KeyFor(channel, authenticationKey);
-			return ResponseRegistry.ContainsKey(key)
-				? JsonConvert.DeserializeObject<AccessGrantResponse>(await Decompress(ResponseRegistry[key]))
+			return Registry.ContainsKey(key)
+				? JsonConvert.DeserializeObject<GrantResponse>(await Decompress(ResponseRegistry[key]))
 				: null;
 		}
 
-		public bool Granted(Channel channel, string authenticationKey)
+		public bool Granted(Channel channel, string authenticationKey, AccessType access)
 		{
 			var key = KeyFor(channel, authenticationKey);
-			return ExpirationRegistry.ContainsKey(key) && ExpirationRegistry[key] > DateTime.UtcNow.Ticks;
+			return Registry.ContainsKey(key) && Registry[key].AccessValid(access);
 		}
 
 		public void Unregister(Channel channel, string authenticationKey)
 		{
-			throw new System.NotImplementedException();
+			if (channel == null) throw new ArgumentNullException(nameof(channel));
+			if (string.IsNullOrWhiteSpace(authenticationKey)) throw new ArgumentNullException(nameof(authenticationKey));
+
+			var key = KeyFor(channel, authenticationKey);
+			if (Registry.ContainsKey(key))
+			{
+				Registry.Remove(key);
+			}
+			if (ResponseRegistry.ContainsKey(key))
+			{
+				ResponseRegistry.Remove(key);
+			}
 		}
 
 		private static string KeyFor(Channel channel, string authenticationKey)

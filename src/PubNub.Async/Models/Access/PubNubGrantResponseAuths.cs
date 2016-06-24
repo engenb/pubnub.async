@@ -2,7 +2,7 @@
 
 namespace PubNub.Async.Models.Access
 {
-	public class AccessGrantResponseAuths
+	public class PubNubGrantResponseAuths
 	{
 		[JsonProperty("r")]
 		public bool Read { get; set; }

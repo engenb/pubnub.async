@@ -55,13 +55,14 @@ namespace PubNub.Async.Push.Tests
         [Fact]
         public async Task Register__Given_BodyReturnedInResponse__Then_ReturnsEmptyResponse()
         {
+            var expectedMessage = "Modified Channels";
             var subject = CreateSubject();
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(200, new object[] { 1, "Modified Channels" });
+                httpTest.RespondWithJson(200, new object[] { 1, expectedMessage });
                 var response = await subject.Register(DeviceType.Android, "token");
                 Assert.True(response.Success);
-                Assert.Null(response.Message);
+                Assert.Equal(expectedMessage, response.Message);
             }
         }
 
@@ -89,13 +90,14 @@ namespace PubNub.Async.Push.Tests
         [Fact]
         public async Task Revoke__Given_BodyReturnedInResponse__Then_ReturnsEmptyResponse()
         {
+            var expectedMessage = "Modified Channels";
             var subject = CreateSubject();
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(200, new object[] { 1, "Modified Channels" });
+                httpTest.RespondWithJson(200, new object[] { 1, expectedMessage });
                 var response = await subject.Revoke(DeviceType.Android, "token");
                 Assert.True(response.Success);
-                Assert.Null(response.Message);
+                Assert.Equal(expectedMessage, response.Message);
             }
         }
 

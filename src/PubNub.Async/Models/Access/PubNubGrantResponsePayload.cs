@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace PubNub.Async.Models.Access
 {
-	public class AccessGrantResponsePayload
+	public class PubNubGrantResponsePayload
 	{
 		[JsonProperty("ttl")]
 		public int MintuesToExpire { get; set; }
 		[JsonProperty("auths")]
-		public IDictionary<string, AccessGrantResponseAuths> Auths { get; set; }
+		public IDictionary<string, PubNubGrantResponseAuths> Auths { get; set; }
 		[JsonProperty("subscribe_key")]
 		public string SubscribeKey { get; set; }
 		[JsonProperty("level")]

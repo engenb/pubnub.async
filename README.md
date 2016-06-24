@@ -28,11 +28,11 @@ Still with me?  I'm on a mission to improve upon the stock offering of the PubNu
 Yes, that's a made up word.  Below are some examples of what it means.
 ```csharp
 // Everything revolves around a channel
-var history = "channelA".History<ApplicationSpecificMessageModel>();
-var ancientHistory = new Channel("channelB").History<ApplicationSpecificMessageModel>();
+var history = await "channelA".History<ApplicationSpecificMessageModel>();
+var ancientHistory = await new Channel("channelB").History<ApplicationSpecificMessageModel>();
 
 // you can specifically configure a single shot channel...
-var response = "particular-config-channel"
+var response = await "particular-config-channel"
 	.SecuredWith(AuthKey) //enables & handles PAM
 	.EncryptedWith(CipherKey) //enables & handles encryption
 	.Publish(HelloWorld); // publish a message
@@ -41,8 +41,8 @@ var response = "particular-config-channel"
 var client = "multi-use"
 	.SecuredWith(AuthKey)
 	.EncryptedWith(CipherKey);
-var response = client.Publish(YourMessageModel);
-var history = client.History<YourMessageModel>();
+var response = await client.Publish(YourMessageModel);
+var history = await client.History<YourMessageModel>();
 ```
 ```csharp
 // you may, additionally, configure an application-level configuration, ideally at application startup...
@@ -74,7 +74,7 @@ using(var pubNubTest = new PubNubTest())
     .Setup(x => x.Establish(AccessType.ReadWrite))
     .Returns(expectedGrantResponse);
   
-  var result = "test-channel"
+  var result = await "test-channel"
     .Secured()
     .Grant(AccessType.ReadWrite);
   

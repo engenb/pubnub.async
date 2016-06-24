@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Http;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
@@ -29,7 +29,7 @@ namespace PubNub.Async.Services.Access
 			Channel = client.Channel;
 		}
 
-		public async Task<AccessGrantResponse> Establish(AccessType access)
+		public async Task<GrantResponse> Establish(AccessType access)
 		{
 			//TODO - handle r/w/rw
 			access = AccessType.ReadWrite;
@@ -43,10 +43,10 @@ namespace PubNub.Async.Services.Access
 				//TODO: warn grant on unsecured channel
 			}
 
-			// if access grant is in force, return cached result
-			if (AccessRegistry.Granted(Channel, Environment.AuthenticationKey))
+			// if access was previously granted, return cached result
+			if (AccessRegistry.Granted(Channel, Environment.AuthenticationKey, access))
 			{
-				return await AccessRegistry.Registration(Channel, Environment.AuthenticationKey);
+				return await AccessRegistry.CachedRegistration(Channel, Environment.AuthenticationKey);
 			}
 
 			// I have experimented with this a bit, and the ORDER of params in the url appears to matter...
@@ -61,7 +61,6 @@ namespace PubNub.Async.Services.Access
 
 			requestUrl
 				.SetQueryParam("channel", Channel.Name)
-				//.SetQueryParam("pnsdk", Environment.SdkVersion)
 				.SetQueryParam("r", Convert.ToInt32(access.GrantsRead()))
 				.SetQueryParam("timestamp", SecondsSinceEpoch(DateTime.UtcNow));
 
@@ -82,13 +81,17 @@ namespace PubNub.Async.Services.Access
 				requestUrl.Query);
 			requestUrl.SetQueryParam("signature", Sign(Environment.SecretKey, signature), true);
 
-			var rawResponse = await requestUrl.GetAsync()
+			var rawResponse = await requestUrl
+				.ConfigureClient(c => c.AllowedHttpStatusRange = "*")
+				.GetAsync()
 				.ProcessResponse()
 				.ReceiveString();
 
 			var response = DeserializeResponse(rawResponse);
-			
-			await AccessRegistry.Register(Channel, Environment.AuthenticationKey, response);
+			if (response.Success)
+			{
+				await AccessRegistry.Register(Channel, Environment.AuthenticationKey, response);
+			}
 			return response;
 		}
 
@@ -119,9 +122,31 @@ namespace PubNub.Async.Services.Access
 				.Replace('/', '_');
 		}
 
-		private AccessGrantResponse DeserializeResponse(string rawResponse)
+		private GrantResponse DeserializeResponse(string rawResponse)
 		{
-			return JsonConvert.DeserializeObject<AccessGrantResponse>(rawResponse);
+			var pubNubResponse = JsonConvert.DeserializeObject<PubNubGrantResponse>(rawResponse);
+			
+			var access = AccessType.None;
+
+			var auths = pubNubResponse.Paylaod.Auths;
+			if (auths.ContainsKey(Environment.AuthenticationKey))
+			{
+				var grant = auths[Environment.AuthenticationKey];
+				// this is kind of ugly, but avoids a huge if, else if, else
+				access = grant.Read && grant.Write	// if read && write
+					? AccessType.ReadWrite
+					: grant.Read					// else read || write
+						? AccessType.Read
+						: AccessType.Write;
+			}
+
+			return new GrantResponse
+			{
+				Success = 200 <= (int) pubNubResponse.Status && (int) pubNubResponse.Status < 400,
+				Message = pubNubResponse.Message,
+				Access = access,
+				MinutesToExpire = pubNubResponse.Paylaod.MintuesToExpire
+			};
 		}
 	}
 }

@@ -5,7 +5,7 @@ namespace PubNub.Async.Services.Access
 {
 	public interface IAccessManager
 	{
-		Task<AccessGrantResponse> Establish(AccessType access);
+		Task<GrantResponse> Establish(AccessType access);
 		Task Revoke(AccessType access);
 	}
 }

@@ -12,5 +12,23 @@ namespace PubNub.Async.Push.Models
 
         [JsonProperty(PropertyName = "pn_debug")]
         public bool IsDebug { get; set; }
+
+        public PushPayload(string message)
+        {
+            Apns = new ApnsPayload
+            {
+                Aps = new ApsPayload
+                {
+                    Alert = message
+                }
+            };
+            Gcm = new GcmPayload
+            {
+                Data = new GcmDataPayload
+                {
+                    Message = message
+                }
+            };
+        }
     }
 }
