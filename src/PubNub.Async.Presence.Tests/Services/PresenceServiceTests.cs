@@ -304,6 +304,49 @@ namespace PubNub.Async.Presence.Tests.Services
 		}
 
 		[Fact]
+		public async Task Subscriptions__Given_ConfiguredClient__Then_GetSubscriptions()
+		{
+			var expectedSubKey = Fixture.Create<string>();
+			var expectedSessionUuid = Fixture.Create<string>();
+
+			var expectedPubNubSubscriptionsResponse = Fixture.Create<PubNubSubscriptionsResponse>();
+
+			var expectedResponse = new SubscriptionsResponse
+			{
+				Success = expectedPubNubSubscriptionsResponse.Status == HttpStatusCode.OK,
+				Message = expectedPubNubSubscriptionsResponse.Message,
+				Channels = expectedPubNubSubscriptionsResponse.Payload.Channels
+			};
+
+			var client = Settings.Default.PresenceTestChannel
+				   .ConfigurePubNub(c =>
+				   {
+					   c.SessionUuid = expectedSessionUuid;
+					   c.SubscribeKey = expectedSubKey;
+				   });
+
+			var expectedUrl = client.Environment.Host
+				.AppendPathSegments("v2", "presence")
+				.AppendPathSegments("sub_key", client.Environment.SubscribeKey)
+				.AppendPathSegments("uuid", client.Environment.SessionUuid);
+
+			var subject = new PresenceService(client);
+
+			using (var httpTest = new HttpTest())
+			{
+				httpTest.RespondWithJson(expectedPubNubSubscriptionsResponse);
+
+				var result = await subject.Subscriptions();
+
+				httpTest.ShouldHaveCalled(expectedUrl)
+					.WithVerb(HttpMethod.Get)
+					.Times(1);
+
+				Assert.Equal(JsonConvert.SerializeObject(expectedResponse), JsonConvert.SerializeObject(result));
+			}
+		}
+
+		[Fact]
 		[Trait("Category", "integration")]
 		public async Task Subscribers__Given_ConfiguratedClient__When_ExcludeUuidsAndState__Then_FetchOccupancy()
 		{
@@ -361,6 +404,25 @@ namespace PubNub.Async.Presence.Tests.Services
 			Assert.NotNull(result);
 			Assert.True(result.Success);
 			Assert.NotNull(result.Subscribers);
+		}
+
+		[Fact]
+		[Trait("Category", "integration")]
+		public async Task Subscriptions__Given_ConfiguredClient__Then_FetchSubscribedChannels()
+		{
+			var client = Settings.Default.PresenceTestChannel
+				.ConfigurePubNub(c =>
+				{
+					c.SessionUuid = "presence-test-session";
+					c.SubscribeKey = Settings.Default.SubscribeKey;
+				});
+
+			var subject = new PresenceService(client);
+
+			var result = await subject.Subscriptions();
+
+			Assert.NotNull(result);
+			Assert.True(result.Success);
 		}
 
 		public class PresenceTestState

@@ -13,5 +13,7 @@ namespace PubNub.Async.Presence.Services
 		
 		Task<SubscribersResponse<TState>> Subscribers<TState>(bool includeSessionState = false, bool includeUuids = true)
 			where TState : class;
+
+		Task<SubscriptionsResponse> Subscriptions();
 	}
 }

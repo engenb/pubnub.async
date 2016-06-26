@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
 using PubNub.Async.Models.Channel;
@@ -102,6 +101,24 @@ namespace PubNub.Async.Presence.Services
 				Subscribers = subscriberUuids.Subscribers?
 					.Select(x => new Subscriber<TState> {Uuid = x})
 					.ToArray()
+			};
+		}
+
+		public async Task<SubscriptionsResponse> Subscriptions()
+		{
+			var response = await Environment.Host
+				.AppendPathSegments("v2", "presence")
+				.AppendPathSegments("sub_key", Environment.SubscribeKey)
+				.AppendPathSegments("uuid", Environment.SessionUuid)
+				.GetAsync()
+				.ProcessResponse()
+				.ReceiveJson<PubNubSubscriptionsResponse>();
+
+			return new SubscriptionsResponse
+			{
+				Success = response.Status == HttpStatusCode.OK,
+				Message = response.Message,
+				Channels = response.Payload?.Channels
 			};
 		}
 

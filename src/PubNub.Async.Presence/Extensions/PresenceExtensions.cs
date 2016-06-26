@@ -96,5 +96,13 @@ namespace PubNub.Async.Presence.Extensions
 				.Subscribers<TState>()
 				.ConfigureAwait(false);
 		}
+
+		public static async Task<SubscriptionsResponse> Subscriptions(this IPubNubClient client)
+		{
+			return await PubNub.Environment
+				.Resolve<IPresenceService>(client)
+				.Subscriptions()
+				.ConfigureAwait(false);
+		}
 	}
 }

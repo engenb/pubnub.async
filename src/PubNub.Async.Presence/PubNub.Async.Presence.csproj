@@ -46,12 +46,15 @@
     </Compile>
     <Compile Include="Configuration\EnvironmentExtensions.cs" />
     <Compile Include="Extensions\PresenceExtensions.cs" />
+    <Compile Include="Models\PubNubSubscriptionsResponse.cs" />
+    <Compile Include="Models\PubNubSubscriptionsResponsePayload.cs" />
     <Compile Include="Models\Subscriber.cs" />
     <Compile Include="Models\SubscribersResponse.cs" />
     <Compile Include="Models\PubNubSubscribersResponse.cs" />
     <Compile Include="Models\PubNubSubscriberUuidsResponse.cs" />
     <Compile Include="Models\SessionStateResponse.cs" />
     <Compile Include="Models\PubNubStateResponse.cs" />
+    <Compile Include="Models\SubscriptionsResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IPresenceService.cs" />
     <Compile Include="Services\PresenceService.cs" />
@@ -97,6 +100,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="PubNub.Async.Presence.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
