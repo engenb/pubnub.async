@@ -1,56 +1,54 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
-              GeneratedClassNamespace="PubNub.Async.Tests.Common.Properties" GeneratedClassName="Settings">
-	<Profiles />
-	<Settings>
-		<Setting Name="NoFeaturesPublishKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">pub-c-dea93253-b374-4dbc-9d00-eec4ba5f74bd</Value>
-		</Setting>
-		<Setting Name="NoFeaturesSubscribeKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">sub-c-6dfc18e6-0fef-11e6-8c3e-0619f8945a4f</Value>
-		</Setting>
-		<Setting Name="CipherKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">CIPHER_KEY</Value>
-		</Setting>
-		<Setting Name="PublishKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">pub-c-1ad3ed8a-1ecf-4d26-ba77-b554f077e87e</Value>
-		</Setting>
-		<Setting Name="SubscribeKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">sub-c-4d29e328-101c-11e6-a8fd-02ee2ddab7fe</Value>
-		</Setting>
-		<Setting Name="SecretKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">sec-c-NWMyZTE4ZmUtMDlkZC00NzM5LThiYzQtOWJjMTdjNmRmY2Rl</Value>
-		</Setting>
-		<Setting Name="HistoryEncryptedChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">history-tests-encrypted</Value>
-		</Setting>
-		<Setting Name="HistoryDecryptedChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">history-tests-unencrypted</Value>
-		</Setting>
-		<Setting Name="HistoryEncryptedHighVolumeChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">history-tests-encrypted.high-volume</Value>
-		</Setting>
-		<Setting Name="HistoryDecryptedHighVolumeChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">history-tests-unencrypted.high-volume</Value>
-		</Setting>
-		<Setting Name="PublishDecryptedChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">publish-tests-unencrypted</Value>
-		</Setting>
-		<Setting Name="PublishEncryptedChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">publish-tests-encrypted</Value>
-		</Setting>
-		<Setting Name="PamPublishKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">pub-c-bc275f09-c3c1-4cce-b52e-bea8ff9c5b55</Value>
-		</Setting>
-		<Setting Name="PamSubKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">sub-c-880a28f4-2e5d-11e6-a01f-0619f8945a4f</Value>
-		</Setting>
-		<Setting Name="PamSecKey" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">sec-c-Y2JkZDM1MWMtNjQyMy00NjJiLTk5NGQtZWIyMTQ5ZTlmYTk0</Value>
-		</Setting>
-		<Setting Name="PresenceTestChannel" Type="System.String" Scope="Application">
-			<Value Profile="(Default)">pressence-test</Value>
-		</Setting>
-	</Settings>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PubNub.Async.Tests.Common.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="NoFeaturesPublishKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">pub-c-dea93253-b374-4dbc-9d00-eec4ba5f74bd</Value>
+    </Setting>
+    <Setting Name="NoFeaturesSubscribeKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sub-c-6dfc18e6-0fef-11e6-8c3e-0619f8945a4f</Value>
+    </Setting>
+    <Setting Name="CipherKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CIPHER_KEY</Value>
+    </Setting>
+    <Setting Name="PublishKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">pub-c-1ad3ed8a-1ecf-4d26-ba77-b554f077e87e</Value>
+    </Setting>
+    <Setting Name="SubscribeKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sub-c-4d29e328-101c-11e6-a8fd-02ee2ddab7fe</Value>
+    </Setting>
+    <Setting Name="SecretKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sec-c-NWMyZTE4ZmUtMDlkZC00NzM5LThiYzQtOWJjMTdjNmRmY2Rl</Value>
+    </Setting>
+    <Setting Name="HistoryEncryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">history-tests-encrypted</Value>
+    </Setting>
+    <Setting Name="HistoryDecryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">history-tests-unencrypted</Value>
+    </Setting>
+    <Setting Name="HistoryEncryptedHighVolumeChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">history-tests-encrypted.high-volume</Value>
+    </Setting>
+    <Setting Name="HistoryDecryptedHighVolumeChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">history-tests-unencrypted.high-volume</Value>
+    </Setting>
+    <Setting Name="PublishDecryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">publish-tests-unencrypted</Value>
+    </Setting>
+    <Setting Name="PublishEncryptedChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">publish-tests-encrypted</Value>
+    </Setting>
+    <Setting Name="PamPublishKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">pub-c-bc275f09-c3c1-4cce-b52e-bea8ff9c5b55</Value>
+    </Setting>
+    <Setting Name="PamSubKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sub-c-880a28f4-2e5d-11e6-a01f-0619f8945a4f</Value>
+    </Setting>
+    <Setting Name="PamSecKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sec-c-Y2JkZDM1MWMtNjQyMy00NjJiLTk5NGQtZWIyMTQ5ZTlmYTk0</Value>
+    </Setting>
+    <Setting Name="PresenceTestChannel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">presence-test</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace PubNub.Async.Presence.Models
 {
-	public class StateResponse<TState>
+	public class PubNubStateResponse<TState>
 	{
 		[JsonProperty("status")]
 		public HttpStatusCode Status { get; set; }

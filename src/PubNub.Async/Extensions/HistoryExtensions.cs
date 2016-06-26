@@ -7,7 +7,7 @@ namespace PubNub.Async.Extensions
 {
 	public static class HistoryExtensions
 	{
-		public static async Task<HistoryResponse<TContent>> History<TContent>(
+		public static Task<HistoryResponse<TContent>> History<TContent>(
 			this string channel,
 			long? start = null,
 			long? end = null,
@@ -15,12 +15,11 @@ namespace PubNub.Async.Extensions
 			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
-			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime)
-				.ConfigureAwait(false);
+			return new PubNubClient(channel)
+				.History<TContent>(start, end, count, order, includeTime);
 		}
 
-		public static async Task<HistoryResponse<TContent>> History<TContent>(
+		public static Task<HistoryResponse<TContent>> History<TContent>(
 			this Channel channel,
 			long? start = null,
 			long? end = null,
@@ -28,9 +27,8 @@ namespace PubNub.Async.Extensions
 			HistoryOrder order = HistoryOrder.Reverse,
 			bool includeTime = true)
 		{
-			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime)
-				.ConfigureAwait(false);
+			return new PubNubClient(channel)
+				.History<TContent>(start, end, count, order, includeTime);
 		}
 
 		public static async Task<HistoryResponse<TContent>> History<TContent>(

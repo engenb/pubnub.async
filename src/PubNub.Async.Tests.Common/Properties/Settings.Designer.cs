@@ -160,7 +160,7 @@ namespace PubNub.Async.Tests.Common.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("pressence-test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("presence-test")]
         public string PresenceTestChannel {
             get {
                 return ((string)(this["PresenceTestChannel"]));

@@ -7,18 +7,16 @@ namespace PubNub.Async.Extensions
 {
 	public static class AccessExtensions
 	{
-		public static async Task<GrantResponse> Grant(this string channel, AccessType access)
+		public static Task<GrantResponse> Grant(this string channel, AccessType access)
 		{
-			return await new PubNubClient(channel)
-				.Grant(access)
-				.ConfigureAwait(false);
+			return new PubNubClient(channel)
+				.Grant(access);
 		}
 
-		public static async Task<GrantResponse> Grant(this Channel channel, AccessType access)
+		public static Task<GrantResponse> Grant(this Channel channel, AccessType access)
 		{
-			return await new PubNubClient(channel)
-				.Grant(access)
-				.ConfigureAwait(false);
+			return new PubNubClient(channel)
+				.Grant(access);
 		}
 
 		public static async Task<GrantResponse> Grant(this IPubNubClient client, AccessType access)
