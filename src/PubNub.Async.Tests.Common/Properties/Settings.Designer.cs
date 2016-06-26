@@ -157,5 +157,14 @@ namespace PubNub.Async.Tests.Common.Properties {
                 return ((string)(this["PamSecKey"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("pressence-test")]
+        public string PresenceTestChannel {
+            get {
+                return ((string)(this["PresenceTestChannel"]));
+            }
+        }
     }
 }

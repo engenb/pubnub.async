@@ -13,7 +13,8 @@ namespace PubNub.Async.Extensions
 			bool recordHistory = true)
 		{
 			return await new PubNubClient(channel)
-				.Publish(message, recordHistory);
+				.Publish(message, recordHistory)
+				.ConfigureAwait(false);
 		}
 
 		public static async Task<PublishResponse> Publish<TContent>(
@@ -22,7 +23,8 @@ namespace PubNub.Async.Extensions
 			bool recordHistory = true)
 		{
 			return await new PubNubClient(channel)
-				.Publish(message, recordHistory);
+				.Publish(message, recordHistory)
+				.ConfigureAwait(false);
 		}
 
 		public static async Task<PublishResponse> Publish<TContent>(

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
@@ -97,7 +96,7 @@ namespace PubNub.Async.Services.Access
 
 		public Task Revoke(AccessType access)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		private static long SecondsSinceEpoch(DateTime utcNow)
@@ -125,7 +124,7 @@ namespace PubNub.Async.Services.Access
 		private GrantResponse DeserializeResponse(string rawResponse)
 		{
 			var pubNubResponse = JsonConvert.DeserializeObject<PubNubGrantResponse>(rawResponse);
-			
+
 			var access = AccessType.None;
 
 			var auths = pubNubResponse.Paylaod.Auths;
@@ -133,9 +132,9 @@ namespace PubNub.Async.Services.Access
 			{
 				var grant = auths[Environment.AuthenticationKey];
 				// this is kind of ugly, but avoids a huge if, else if, else
-				access = grant.Read && grant.Write	// if read && write
+				access = grant.Read && grant.Write // if read && write
 					? AccessType.ReadWrite
-					: grant.Read					// else read || write
+					: grant.Read // else read || write
 						? AccessType.Read
 						: AccessType.Write;
 			}

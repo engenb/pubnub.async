@@ -14,7 +14,7 @@ namespace PubNub.Async.Testing
 			Func<ICryptoService> cryptoFactory = null,
 			Func<IPubNubClient, IAccessManager> accessFactory = null,
 			Func<IPubNubClient, IHistoryService> historyFactory = null,
-			Func<IPubNubClient, IPublishService> publishFactory = null )
+			Func<IPubNubClient, IPublishService> publishFactory = null)
 		{
 			cryptoFactory = cryptoFactory ?? Mock.Of<ICryptoService>;
 			accessFactory = accessFactory ?? (client => Mock.Of<IAccessManager>());

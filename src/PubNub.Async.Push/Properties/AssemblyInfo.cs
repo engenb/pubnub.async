@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("PubNub.Async.Push")]
 [assembly: AssemblyDescription("Push notification extensions for PubNub.Async")]

@@ -66,7 +66,7 @@ var specialClient = "special-channel"
 ```
 
 ## Testability
-I'm a fan of [Moq](https://github.com/moq/moq), and I hope you are too.  This is still a work in progress, but the groundword for a basic testing framework is in place.  The end result should look something like this:
+I'm a fan of [Moq](https://github.com/moq/moq), and I hope you are too.  This is still a work in progress, but the groundwork for a basic testing framework is in place.  The end result should look something like this:
 ```csharp
 using(var pubNubTest = new PubNubTest())
 {

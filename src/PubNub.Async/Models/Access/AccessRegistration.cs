@@ -16,11 +16,11 @@ namespace PubNub.Async.Models.Access
 				{
 					return utcNow < ReadExpires && utcNow < WriteExpires;
 				}
-					case AccessType.Read:
+				case AccessType.Read:
 				{
 					return utcNow < ReadExpires;
 				}
-					case AccessType.Write:
+				case AccessType.Write:
 				{
 					return utcNow < WriteExpires;
 				}

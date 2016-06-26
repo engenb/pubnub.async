@@ -33,7 +33,7 @@ namespace PubNub.Async.Tests.Services.History
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] { new HistoryTestMessage[] { }, 1234, 1234 });
+				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
 
 				await subject.History<HistoryTestMessage>();
 
@@ -58,7 +58,7 @@ namespace PubNub.Async.Tests.Services.History
 
 			var subject = new HistoryService(client, mockCrypto.Object, mockAccess.Object);
 
-			using(var httpTest = new HttpTest())
+			using (var httpTest = new HttpTest())
 			{
 				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
 
@@ -166,7 +166,7 @@ namespace PubNub.Async.Tests.Services.History
 		}
 
 		[Fact]
-		[Trait("Category" ,"integration")]
+		[Trait("Category", "integration")]
 		public async Task History__Given_ConfiguredPubNub__When_Count250Reverse__Then_Fetch250InReverseOrder()
 		{
 			var expectedCount = 250;
@@ -229,6 +229,7 @@ namespace PubNub.Async.Tests.Services.History
 		{
 			[JsonProperty("header")]
 			public string Header { get; set; }
+
 			[JsonProperty("content")]
 			public HistoryTestMessage Content { get; set; }
 		}

@@ -123,7 +123,7 @@ namespace PubNub.Async.Tests.Models.Access
 			var utcAnHourAgo = DateTime.UtcNow.Subtract(TimeSpan.FromHours(1)).Ticks;
 			var subject = new AccessRegistration
 			{
-				ReadExpires = utcAnHourAgo,
+				ReadExpires = utcAnHourAgo
 			};
 
 			var result = subject.AccessValid(AccessType.Read);
@@ -137,7 +137,7 @@ namespace PubNub.Async.Tests.Models.Access
 			var utcAnHourFwd = DateTime.UtcNow.Add(TimeSpan.FromHours(1)).Ticks;
 			var subject = new AccessRegistration
 			{
-				ReadExpires = utcAnHourFwd,
+				ReadExpires = utcAnHourFwd
 			};
 
 			var result = subject.AccessValid(AccessType.Read);

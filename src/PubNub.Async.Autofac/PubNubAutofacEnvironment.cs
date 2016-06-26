@@ -14,7 +14,7 @@ namespace PubNub.Async.Autofac
 
 		public override TService Resolve<TService>(IPubNubClient client)
 		{
-			return Context.Resolve<TService>(new TypedParameter(typeof(IPubNubClient), client));
+			return Context.Resolve<TService>(new TypedParameter(typeof (IPubNubClient), client));
 		}
 	}
 }

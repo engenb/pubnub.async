@@ -9,9 +9,16 @@ namespace PubNub.Async
 		private static readonly object SettingsLock = new object();
 
 		private static Lazy<IPubNubEnvironment> _environment;
+
 		internal static Lazy<IPubNubEnvironment> InternalEnvironment
 		{
-			get { return _environment ?? (_environment = new Lazy<IPubNubEnvironment>(() => new DefaultPubNubEnvironment(), LazyThreadSafetyMode.ExecutionAndPublication)); }
+			get
+			{
+				return _environment ??
+				       (_environment =
+					       new Lazy<IPubNubEnvironment>(() => new DefaultPubNubEnvironment(),
+						       LazyThreadSafetyMode.ExecutionAndPublication));
+			}
 			set { _environment = value; }
 		}
 

@@ -17,12 +17,12 @@ namespace PubNub.Async.Autofac.Tests
 			builder.Build();
 
 			Assert.IsType<PubNubAutofacEnvironment>(PubNub.Environment);
-			
+
 			var client = new PubNubClient("channel");
 
 			var crypto = PubNub.Environment.Resolve<ICryptoService>(client);
 			Assert.NotNull(crypto);
-			
+
 			var publish = PubNub.Environment.Resolve<IPublishService>(client);
 			Assert.NotNull(publish);
 

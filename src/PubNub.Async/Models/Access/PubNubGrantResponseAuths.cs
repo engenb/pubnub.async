@@ -6,6 +6,7 @@ namespace PubNub.Async.Models.Access
 	{
 		[JsonProperty("r")]
 		public bool Read { get; set; }
+
 		[JsonProperty("w")]
 		public bool Write { get; set; }
 	}

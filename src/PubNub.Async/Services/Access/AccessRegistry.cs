@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
-using Flurl.Util;
 using Newtonsoft.Json;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
@@ -34,8 +33,8 @@ namespace PubNub.Async.Services.Access
 
 			Registry[key] = new AccessRegistration
 			{
-				ReadExpires = grant.Access.GrantsRead() ? expiration : (long?)null,
-				WriteExpires = grant.Access.GrantsWrite() ? expiration : (long?)null
+				ReadExpires = grant.Access.GrantsRead() ? expiration : (long?) null,
+				WriteExpires = grant.Access.GrantsWrite() ? expiration : (long?) null
 			};
 			ResponseRegistry[key] = await Compress(JsonConvert.SerializeObject(grant));
 		}
@@ -90,7 +89,7 @@ namespace PubNub.Async.Services.Access
 
 		private static async Task<string> Decompress(byte[] compressedResponse)
 		{
-			using(var inStream = new MemoryStream(compressedResponse))
+			using (var inStream = new MemoryStream(compressedResponse))
 			using (var gzip = new GZipStream(inStream, CompressionMode.Decompress))
 			using (var outStream = new MemoryStream())
 			{

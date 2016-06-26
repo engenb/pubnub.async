@@ -8,12 +8,14 @@ namespace PubNub.Async.Extensions
 	{
 		public static IPubNubClient ConfigurePubNub(this string channel, Action<IPubNubEnvironment> action)
 		{
-			return new PubNubClient(channel).ConfigurePubNub(action);
+			return new PubNubClient(channel)
+				.ConfigurePubNub(action);
 		}
 
 		public static IPubNubClient ConfigurePubNub(this Channel channel, Action<IPubNubEnvironment> action)
 		{
-			return new PubNubClient(channel).ConfigurePubNub(action);
+			return new PubNubClient(channel)
+				.ConfigurePubNub(action);
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace PubNub.Async
 	{
 		public IPubNubEnvironment Environment { get; }
 		public Channel Channel { get; }
-		
+
 		public PubNubClient(string channel) : this(new Channel(channel))
 		{
 		}

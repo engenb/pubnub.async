@@ -16,7 +16,8 @@ namespace PubNub.Async.Extensions
 			bool includeTime = true)
 		{
 			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime);
+				.History<TContent>(start, end, count, order, includeTime)
+				.ConfigureAwait(false);
 		}
 
 		public static async Task<HistoryResponse<TContent>> History<TContent>(
@@ -28,7 +29,8 @@ namespace PubNub.Async.Extensions
 			bool includeTime = true)
 		{
 			return await new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime);
+				.History<TContent>(start, end, count, order, includeTime)
+				.ConfigureAwait(false);
 		}
 
 		public static async Task<HistoryResponse<TContent>> History<TContent>(

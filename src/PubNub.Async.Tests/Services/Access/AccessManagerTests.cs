@@ -8,7 +8,6 @@ using Moq;
 using Newtonsoft.Json;
 using Ploeh.AutoFixture;
 using PubNub.Async.Extensions;
-using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Services.Access;
@@ -76,7 +75,7 @@ namespace PubNub.Async.Tests.Services.Access
 				.With(x => x.MintuesToExpire, 5)
 				.With(x => x.Auths, new Dictionary<string, PubNubGrantResponseAuths>
 				{
-					{ authKey, new PubNubGrantResponseAuths {Read = true, Write = true} }
+					{authKey, new PubNubGrantResponseAuths {Read = true, Write = true}}
 				})
 				.Create();
 
@@ -91,7 +90,7 @@ namespace PubNub.Async.Tests.Services.Access
 				Success = true,
 				Message = pnResponse.Message,
 				MinutesToExpire = pnResponse.Paylaod.MintuesToExpire,
-				Access = access,
+				Access = access
 			};
 
 			var client = channel
@@ -107,7 +106,7 @@ namespace PubNub.Async.Tests.Services.Access
 			mockRegistry
 				.Setup(x => x.Granted(channel, authKey, access))
 				.Returns(false);
-			
+
 			var subject = new AccessManager(client, mockRegistry.Object);
 
 			using (var httpTest = new HttpTest())
@@ -128,7 +127,7 @@ namespace PubNub.Async.Tests.Services.Access
 					.With(c => c.Request.RequestUri.Query.Contains("signature="))
 					.With(c => !c.Request.RequestUri.Query.Contains("ttl="))
 					.Times(1);
-				
+
 				Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(result));
 
 				mockRegistry.Verify(x => x.Register(channel, authKey, result));

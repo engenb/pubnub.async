@@ -1,13 +1,11 @@
 ﻿using System;
-using PubNub.Async.Services.Access;
-using PubNub.Async.Services.Crypto;
-using PubNub.Async.Services.History;
-using PubNub.Async.Services.Publish;
 
 namespace PubNub.Async.Configuration
 {
 	public abstract class AbstractPubNubEnvironment : IPubNubEnvironment
 	{
+		private string _sessionUuid;
+
 		protected AbstractPubNubEnvironment()
 		{
 			Reset();
@@ -17,8 +15,6 @@ namespace PubNub.Async.Configuration
 		public bool SslEnabled { get; set; }
 		public string Origin { get; set; }
 		public string Host => $"{(SslEnabled ? "https://" : "http://")}{Origin}";
-
-		private string _sessionUuid;
 
 		public string SessionUuid
 		{

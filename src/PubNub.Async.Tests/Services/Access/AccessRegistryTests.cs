@@ -84,7 +84,7 @@ namespace PubNub.Async.Tests.Services.Access
 			var channel = new Channel(channelName);
 
 			var authKey = Fixture.Create<string>();
-			
+
 			var response = Fixture
 				.Build<GrantResponse>()
 				.With(x => x.Access, access)
@@ -165,7 +165,7 @@ namespace PubNub.Async.Tests.Services.Access
 			var subject = new AccessRegistry();
 
 			await subject.Register(channel, authKey, grant);
-			
+
 			var registration = await subject.CachedRegistration(channel, authKey);
 			Assert.NotNull(registration);
 

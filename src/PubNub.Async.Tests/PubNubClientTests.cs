@@ -47,7 +47,7 @@ namespace PubNub.Async.Tests
 		{
 			var channel = new Channel(Fixture.Create<string>());
 			var subject = new PubNubClient(channel);
-			
+
 			subject.Secured();
 
 			Assert.True(channel.Secured);

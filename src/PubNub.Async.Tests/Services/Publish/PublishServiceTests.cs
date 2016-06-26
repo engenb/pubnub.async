@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http.Testing;
 using Moq;
@@ -31,7 +30,7 @@ namespace PubNub.Async.Tests.Services.Publish
 			var expectedResultSuccess = true;
 			var expectedResultMessage = "Sent";
 			var expectedResultSent = 1234;
-			
+
 			var mockCrypto = new Mock<ICryptoService>();
 			mockCrypto
 				.Setup(x => x.Encrypt(null, serializedMessage))
@@ -80,7 +79,7 @@ namespace PubNub.Async.Tests.Services.Publish
 			var expectedResultSuccess = true;
 			var expectedResultMessage = "Sent";
 			var expectedResultSent = 1234;
-			
+
 			var mockCrypto = new Mock<ICryptoService>();
 			mockCrypto
 				.Setup(x => x.Encrypt(expectedCipher, serializedMessage))
@@ -103,7 +102,7 @@ namespace PubNub.Async.Tests.Services.Publish
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] { 1, expectedResultMessage, expectedResultSent });
+				httpTest.RespondWithJson(200, new object[] {1, expectedResultMessage, expectedResultSent});
 
 				response = await subject.Publish(message, false);
 
@@ -118,81 +117,81 @@ namespace PubNub.Async.Tests.Services.Publish
 			mockCrypto.Verify(x => x.Encrypt(expectedCipher, It.IsAny<string>()), Times.Once);
 		}
 
-	    [Fact]
-	    public async Task Publish__Given_Message__When_SecuredAndGrantFails__Then_ReturnErrorMessage()
-	    {
-	        var expectedGrantResponseMessage = Fixture.Create<string>();
-	        var expectedGrantResponse = new GrantResponse {Success = false, Message = expectedGrantResponseMessage};
+		[Fact]
+		public async Task Publish__Given_Message__When_SecuredAndGrantFails__Then_ReturnErrorMessage()
+		{
+			var expectedGrantResponseMessage = Fixture.Create<string>();
+			var expectedGrantResponse = new GrantResponse {Success = false, Message = expectedGrantResponseMessage};
 
-            var message = new PublishTestMessage { Message = "TEST" };
+			var message = new PublishTestMessage {Message = "TEST"};
 
-            var client = "channel"
-	            .Secured();
+			var client = "channel"
+				.Secured();
 
-	        var mockAccess = new Mock<IAccessManager>();
-	        mockAccess
-	            .Setup(x => x.Establish(AccessType.Write))
-	            .ReturnsAsync(expectedGrantResponse);
+			var mockAccess = new Mock<IAccessManager>();
+			mockAccess
+				.Setup(x => x.Establish(AccessType.Write))
+				.ReturnsAsync(expectedGrantResponse);
 
-	        var subject = new PublishService(client, Mock.Of<ICryptoService>(), mockAccess.Object);
-            
-            var result = await subject.Publish(message, false);
+			var subject = new PublishService(client, Mock.Of<ICryptoService>(), mockAccess.Object);
 
-            Assert.NotNull(result);
-            Assert.False(result.Success);
-            Assert.Equal(expectedGrantResponseMessage, result.Message);
-            Assert.Equal(0, result.Sent);
-	    }
+			var result = await subject.Publish(message, false);
 
-	    [Fact]
-	    public async Task Publish__Given_Message__When_SecretKey__Then_AppendSignature()
-	    {
-	        var expectedSignature = Fixture.Create<string>();
+			Assert.NotNull(result);
+			Assert.False(result.Success);
+			Assert.Equal(expectedGrantResponseMessage, result.Message);
+			Assert.Equal(0, result.Sent);
+		}
 
-	        var expectedResponseMessage = Fixture.Create<string>();
-	        var expectedResponseSent = Fixture.Create<long>();
+		[Fact]
+		public async Task Publish__Given_Message__When_SecretKey__Then_AppendSignature()
+		{
+			var expectedSignature = Fixture.Create<string>();
 
-	        var pubKey = Fixture.Create<string>();
-	        var subKey = Fixture.Create<string>();
-	        var secKey = Fixture.Create<string>();
-	        var channel = Fixture.Create<string>();
-	        var messageContent = Fixture.Create<string>();
+			var expectedResponseMessage = Fixture.Create<string>();
+			var expectedResponseSent = Fixture.Create<long>();
 
-            var message = new PublishTestMessage { Message = messageContent };
-	        var serializedMessage = JsonConvert.SerializeObject(message);
-            
-            var client = channel
-	            .ConfigurePubNub(c =>
-	            {
-	                c.PublishKey = pubKey;
-	                c.SubscribeKey = subKey;
-	                c.SecretKey = secKey;
-	            });
+			var pubKey = Fixture.Create<string>();
+			var subKey = Fixture.Create<string>();
+			var secKey = Fixture.Create<string>();
+			var channel = Fixture.Create<string>();
+			var messageContent = Fixture.Create<string>();
 
-	        var uri = pubKey.AppendPathSegments(subKey, secKey, channel, serializedMessage);
+			var message = new PublishTestMessage {Message = messageContent};
+			var serializedMessage = JsonConvert.SerializeObject(message);
 
-            var mockCrypto = new Mock<ICryptoService>();
-	        mockCrypto
-	            .Setup(x => x.Hash(uri, HashAlgorithm.Md5))
-	            .Returns(expectedSignature);
+			var client = channel
+				.ConfigurePubNub(c =>
+				{
+					c.PublishKey = pubKey;
+					c.SubscribeKey = subKey;
+					c.SecretKey = secKey;
+				});
 
-	        var subject = new PublishService(client, mockCrypto.Object, Mock.Of<IAccessManager>());
+			var uri = pubKey.AppendPathSegments(subKey, secKey, channel, serializedMessage);
 
-	        using (var httpTest = new HttpTest())
-	        {
-	            httpTest.RespondWithJson(new object[] {true, expectedResponseMessage, expectedResponseSent});
+			var mockCrypto = new Mock<ICryptoService>();
+			mockCrypto
+				.Setup(x => x.Hash(uri, HashAlgorithm.Md5))
+				.Returns(expectedSignature);
 
-	            var result = await subject.Publish(message, false);
+			var subject = new PublishService(client, mockCrypto.Object, Mock.Of<IAccessManager>());
 
-                Assert.NotNull(result);
-                Assert.True(result.Success);
-                Assert.Equal(expectedResponseMessage, result.Message);
-                Assert.Equal(expectedResponseSent, result.Sent);
+			using (var httpTest = new HttpTest())
+			{
+				httpTest.RespondWithJson(new object[] {true, expectedResponseMessage, expectedResponseSent});
 
-	            httpTest
-	                .ShouldHaveCalled($"https://pubsub.pubnub.com/publish/{pubKey}/{subKey}/{expectedSignature}/*");
-	        }
-	    }
+				var result = await subject.Publish(message, false);
+
+				Assert.NotNull(result);
+				Assert.True(result.Success);
+				Assert.Equal(expectedResponseMessage, result.Message);
+				Assert.Equal(expectedResponseSent, result.Sent);
+
+				httpTest
+					.ShouldHaveCalled($"https://pubsub.pubnub.com/publish/{pubKey}/{subKey}/{expectedSignature}/*");
+			}
+		}
 
 		[Fact]
 		[Trait("Category", "integration")]

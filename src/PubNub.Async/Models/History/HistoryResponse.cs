@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace PubNub.Async.Models.History
+﻿namespace PubNub.Async.Models.History
 {
 	public class HistoryResponse<TMessage>
 	{

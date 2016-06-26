@@ -1,7 +1,4 @@
-﻿using System;
-using PubNub.Async.Services.Access;
-
-namespace PubNub.Async.Models.Access
+﻿namespace PubNub.Async.Models.Access
 {
 	public class GrantResponse
 	{

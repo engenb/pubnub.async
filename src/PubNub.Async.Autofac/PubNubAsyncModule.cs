@@ -43,7 +43,12 @@ namespace PubNub.Async.Autofac
 					var context = c.Resolve<IComponentContext>();
 
 					var client = p.TypedAs<IPubNubClient>();
-					if(client == null) throw new InvalidOperationException($"{typeof(IPubNubClient).Name} is required to resolve ${typeof(IHistoryService).Name}");
+					if (client == null)
+					{
+						throw new InvalidOperationException(
+							$"{typeof (IPubNubClient).Name} is required to resolve ${typeof (IHistoryService).Name}");
+					}
+
 					var access = context.Resolve<Func<IPubNubClient, IAccessManager>>();
 
 					return new HistoryService(client, c.Resolve<ICryptoService>(), access(client));
@@ -55,7 +60,12 @@ namespace PubNub.Async.Autofac
 					var context = c.Resolve<IComponentContext>();
 
 					var client = p.TypedAs<IPubNubClient>();
-					if (client == null) throw new InvalidOperationException($"{typeof(IPubNubClient).Name} is required to resolve ${typeof(IPublishService).Name}");
+					if (client == null)
+					{
+						throw new InvalidOperationException(
+							$"{typeof (IPubNubClient).Name} is required to resolve ${typeof (IPublishService).Name}");
+					}
+
 					var access = context.Resolve<Func<IPubNubClient, IAccessManager>>();
 
 					return new PublishService(client, c.Resolve<ICryptoService>(), access(client));

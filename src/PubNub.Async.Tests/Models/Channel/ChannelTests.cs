@@ -22,7 +22,7 @@ namespace PubNub.Async.Tests.Models.Channel
 			var ex = Assert.Throws<ArgumentException>(() => new Async.Models.Channel.Channel(null));
 			Assert.Equal(ex.ParamName, "name");
 		}
-		
+
 		[Fact]
 		public void ctor__Given_WhitespaceChannelName__Then_ThrowEx()
 		{

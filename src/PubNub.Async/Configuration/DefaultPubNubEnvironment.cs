@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Crypto;
 using PubNub.Async.Services.History;
@@ -10,7 +9,6 @@ namespace PubNub.Async.Configuration
 {
 	public class DefaultPubNubEnvironment : AbstractPubNubEnvironment, IRegisterService
 	{
-		#region Singleton Services
 		private static readonly object RegistrySyncRoot = new object();
 		private static IAccessRegistry _registry;
 		public static IAccessRegistry RegistryInstance
@@ -50,7 +48,6 @@ namespace PubNub.Async.Configuration
 				return _crypto;
 			}
 		}
-		#endregion
 
 		private ConcurrentDictionary<Type, Func<IPubNubClient, object>> Services { get; }
 
