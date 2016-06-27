@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PubNub.Async.Models.Access;
@@ -23,7 +25,8 @@ namespace PubNub.Async.Services.Access
 			Registry = new ConcurrentDictionary<string, AccessRegistration>();
 			ResponseRegistry = new ConcurrentDictionary<string, byte[]>();
 
-			//TODO: launch thread to clean registry (expired grant responses)
+			//TODO: make this configurable via pubnub environment
+			new Timer(PurgeRegistry, TimeSpan.FromHours(1));
 		}
 
 		public async Task Register(Channel channel, string authenticationKey, GrantResponse grant)
@@ -69,6 +72,22 @@ namespace PubNub.Async.Services.Access
 			}
 		}
 
+		private void PurgeRegistry()
+		{
+			var utcNowTicks = DateTime.UtcNow.Ticks;
+
+			var expired = Registry
+				.Where(x => (!x.Value.ReadExpires.HasValue || x.Value.ReadExpires < utcNowTicks)
+					&& (!x.Value.WriteExpires.HasValue || x.Value.WriteExpires < utcNowTicks))
+				.ToArray();
+
+			foreach (var pair in expired)
+			{
+				Registry.Remove(pair.Key);
+				ResponseRegistry.Remove(pair.Key);
+			}
+		}
+
 		private static string KeyFor(Channel channel, string authenticationKey)
 		{
 			return Convert.ToBase64String(Encoding.UTF8.GetBytes($"{channel.Name}{authenticationKey}"));
@@ -98,5 +117,34 @@ namespace PubNub.Async.Services.Access
 				return Encoding.UTF8.GetString(outBytes, 0, outBytes.Length);
 			}
 		}
+	}
+
+	internal delegate void TimerTask();
+
+	internal sealed class Timer : CancellationTokenSource, IDisposable
+	{
+		public Timer(TimerTask callback, TimeSpan period)
+		{
+			Task.Delay((int)period.TotalMilliseconds, Token)
+				.ContinueWith(async (t, s) =>
+			{
+				var task = (TimerTask)s;
+
+				while (true)
+				{
+					if (IsCancellationRequested)
+					{
+						break;
+					}
+					Task.Run(() => task());
+					await Task.Delay(period);
+				}
+
+			}, callback, CancellationToken.None,
+				TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion,
+				TaskScheduler.Default);
+		}
+
+		public new void Dispose() { Cancel(); }
 	}
 }
