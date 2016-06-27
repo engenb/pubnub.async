@@ -30,13 +30,6 @@ namespace PubNub.Async.Services.Access
 
 		public async Task<GrantResponse> Establish(AccessType access)
 		{
-			//TODO - handle r/w/rw
-			access = AccessType.ReadWrite;
-
-			if (string.IsNullOrWhiteSpace(Environment.SecretKey))
-			{
-				throw new InvalidOperationException("PubNubClient must be configured with secret key in order to establish access");
-			}
 			if (!Channel.Secured)
 			{
 				//TODO: warn grant on unsecured channel

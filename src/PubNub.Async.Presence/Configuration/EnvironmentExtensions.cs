@@ -1,6 +1,7 @@
 ﻿using System;
 using PubNub.Async.Configuration;
 using PubNub.Async.Presence.Services;
+using PubNub.Async.Services.Access;
 
 namespace PubNub.Async.Presence.Configuration
 {
@@ -15,7 +16,7 @@ namespace PubNub.Async.Presence.Configuration
 					$"Incompatible Environment: {nameof(environment)} must implement ${typeof (IRegisterService).Name}");
 			}
 
-			registrar.Register<IPresenceService>(client => new PresenceService(client));
+			registrar.Register<IPresenceService>(client => new PresenceService(client, environment.Resolve<IAccessManager>(client)));
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http.Testing;
+using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ploeh.AutoFixture;
@@ -12,6 +13,7 @@ using PubNub.Async.Presence.Configuration;
 using PubNub.Async.Presence.Extensions;
 using PubNub.Async.Presence.Models;
 using PubNub.Async.Presence.Services;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Tests.Common;
 using PubNub.Async.Tests.Common.Properties;
 using Xunit;
@@ -160,7 +162,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					.ToArray()
 			};
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			using (var httpTest = new HttpTest())
 			{
@@ -209,7 +211,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					.ToArray()
 			};
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			using (var httpTest = new HttpTest())
 			{
@@ -253,7 +255,7 @@ namespace PubNub.Async.Presence.Tests.Services
 				Subscribers = subscribersResponse.Subscribers
 			};
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			using (var httpTest = new HttpTest())
 			{
@@ -267,40 +269,6 @@ namespace PubNub.Async.Presence.Tests.Services
 				
 				Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(result));
 			}
-		}
-
-		[Fact]
-		[Trait("Category", "integration")]
-		public async Task SessionState__Given_ConfiguredClientAndState__Then_StateUpdated()
-		{
-			var state = Fixture.Create<PresenceTestState>();
-
-			var client = Settings.Default.PresenceTestChannel
-				.ConfigurePubNub(c =>
-				{
-					c.SessionUuid = "presence-test-session";
-					c.SubscribeKey = Settings.Default.SubscribeKey;
-				});
-
-			var subject = new PresenceService(client);
-
-			var setResult = await subject.SessionState(state);
-
-			Assert.NotNull(setResult);
-			Assert.NotSame(state, setResult);
-			Assert.True(setResult.Success);
-			Assert.Equal(state.Foo, setResult.State.Foo);
-			Assert.Equal(state.Bar, setResult.State.Bar);
-			Assert.Equal(state.Fubar, setResult.State.Fubar);
-
-			var getResult = await subject.SessionState<PresenceTestState>();
-
-			Assert.NotNull(getResult);
-			Assert.NotSame(state, getResult);
-			Assert.True(getResult.Success);
-			Assert.Equal(state.Foo, getResult.State.Foo);
-			Assert.Equal(state.Bar, getResult.State.Bar);
-			Assert.Equal(state.Fubar, getResult.State.Fubar);
 		}
 
 		[Fact]
@@ -330,7 +298,7 @@ namespace PubNub.Async.Presence.Tests.Services
 				.AppendPathSegments("sub_key", client.Environment.SubscribeKey)
 				.AppendPathSegments("uuid", client.Environment.SessionUuid);
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			using (var httpTest = new HttpTest())
 			{
@@ -348,6 +316,77 @@ namespace PubNub.Async.Presence.Tests.Services
 
 		[Fact]
 		[Trait("Category", "integration")]
+		public async Task SessionState__Given_ConfiguredClientAndState__Then_StateUpdated()
+		{
+			var state = Fixture.Create<PresenceTestState>();
+
+			var client = Settings.Default.PresenceTestChannel
+				.ConfigurePubNub(c =>
+				{
+					c.SessionUuid = "presence-test-session";
+					c.SubscribeKey = Settings.Default.SubscribeKey;
+				});
+
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
+
+			var setResult = await subject.SessionState(state);
+
+			Assert.NotNull(setResult);
+			Assert.NotSame(state, setResult);
+			Assert.True(setResult.Success);
+			Assert.Equal(state.Foo, setResult.State.Foo);
+			Assert.Equal(state.Bar, setResult.State.Bar);
+			Assert.Equal(state.Fubar, setResult.State.Fubar);
+
+			var getResult = await subject.SessionState<PresenceTestState>();
+
+			Assert.NotNull(getResult);
+			Assert.NotSame(state, getResult);
+			Assert.True(getResult.Success);
+			Assert.Equal(state.Foo, getResult.State.Foo);
+			Assert.Equal(state.Bar, getResult.State.Bar);
+			Assert.Equal(state.Fubar, getResult.State.Fubar);
+		}
+
+		[Fact]
+		[Trait("Category", "integration")]
+		public async Task SessionState__Given_ConfiguredClientAndState__When_Secured__Then_GrantAndUpdateState()
+		{
+			var state = Fixture.Create<PresenceTestState>();
+
+			var client = Settings.Default.PresenceTestChannel
+				.SecuredWith("presence-auth")
+				.ConfigurePubNub(c =>
+				{
+					c.SessionUuid = "presence-test-session";
+					c.PublishKey = Settings.Default.PamPublishKey;
+					c.SubscribeKey = Settings.Default.PamSubKey;
+					c.SecretKey = Settings.Default.PamSecKey;
+				});
+
+			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
+
+			var setResult = await subject.SessionState(state);
+
+			Assert.NotNull(setResult);
+			Assert.NotSame(state, setResult);
+			Assert.True(setResult.Success);
+			Assert.Equal(state.Foo, setResult.State.Foo);
+			Assert.Equal(state.Bar, setResult.State.Bar);
+			Assert.Equal(state.Fubar, setResult.State.Fubar);
+
+			var getResult = await subject.SessionState<PresenceTestState>();
+
+			Assert.NotNull(getResult);
+			Assert.NotSame(state, getResult);
+			Assert.True(getResult.Success);
+			Assert.Equal(state.Foo, getResult.State.Foo);
+			Assert.Equal(state.Bar, getResult.State.Bar);
+			Assert.Equal(state.Fubar, getResult.State.Fubar);
+		}
+
+		[Fact]
+		[Trait("Category", "integration")]
 		public async Task Subscribers__Given_ConfiguratedClient__When_ExcludeUuidsAndState__Then_FetchOccupancy()
 		{
 			var client = Settings.Default.PresenceTestChannel
@@ -357,7 +396,30 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SubscribeKey = Settings.Default.SubscribeKey;
 				});
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
+
+			var result = await subject.Subscribers<JObject>(false, false);
+
+			Assert.NotNull(result);
+			Assert.True(result.Success);
+			Assert.Null(result.Subscribers);
+		}
+
+		[Fact]
+		[Trait("Category", "integration")]
+		public async Task Subscribers__Given_ConfiguratedClient__When_Secured__Then_GrantThenFetchOccupancy()
+		{
+			var client = Settings.Default.PresenceTestChannel
+				.SecuredWith("presence-auth")
+				.ConfigurePubNub(c =>
+				{
+					c.SessionUuid = "presence-test-session";
+					c.PublishKey = Settings.Default.PamPublishKey;
+					c.SubscribeKey = Settings.Default.PamSubKey;
+					c.SecretKey = Settings.Default.PamSecKey;
+				});
+
+			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
 
 			var result = await subject.Subscribers<JObject>(false, false);
 
@@ -377,7 +439,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SubscribeKey = Settings.Default.SubscribeKey;
 				});
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			var result = await subject.Subscribers<JObject>();
 
@@ -397,7 +459,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SubscribeKey = Settings.Default.SubscribeKey;
 				});
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
 
 			var result = await subject.Subscribers<JObject>(true);
 
@@ -417,7 +479,29 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SubscribeKey = Settings.Default.SubscribeKey;
 				});
 
-			var subject = new PresenceService(client);
+			var subject = new PresenceService(client, Mock.Of<IAccessManager>());
+
+			var result = await subject.Subscriptions();
+
+			Assert.NotNull(result);
+			Assert.True(result.Success);
+		}
+
+		[Fact]
+		[Trait("Category", "integration")]
+		public async Task Subscriptions__Given_ConfiguredClient__When_Secured__Then_GrantAndFetchSubscribedChannels()
+		{
+			var client = Settings.Default.PresenceTestChannel
+				.SecuredWith("presence-auth")
+				.ConfigurePubNub(c =>
+				{
+					c.SessionUuid = "presence-test-session";
+					c.PublishKey = Settings.Default.PamPublishKey;
+					c.SubscribeKey = Settings.Default.PamSubKey;
+					c.SecretKey = Settings.Default.PamSecKey;
+				});
+
+			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
 
 			var result = await subject.Subscriptions();
 

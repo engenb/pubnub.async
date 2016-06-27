@@ -20,14 +20,6 @@ namespace PubNub.Async.Tests.Services.Access
 	public class AccessManagerTests : AbstractTest
 	{
 		[Fact]
-		public async Task Establish__Given_Channel__When_ClientSecretKeyNotConfigured__Then_ThrowEx()
-		{
-			var subject = new AccessManager(new PubNubClient("channel"), Mock.Of<IAccessRegistry>());
-
-			await Assert.ThrowsAsync<InvalidOperationException>(() => subject.Establish(AccessType.ReadWrite));
-		}
-
-		[Fact]
 		public async Task Establish__Given_ChannelAndConfiguredClient__When_PreviouslyRegistered__Then_ReturnCachedResponse()
 		{
 			var expected = Fixture.Create<GrantResponse>();

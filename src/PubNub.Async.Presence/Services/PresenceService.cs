@@ -6,30 +6,40 @@ using Flurl.Http;
 using Newtonsoft.Json;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Presence.Models;
+using PubNub.Async.Services.Access;
 
 namespace PubNub.Async.Presence.Services
 {
 	public class PresenceService : IPresenceService
 	{
+		private IAccessManager Access { get; }
+
 		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
 
-		public PresenceService(IPubNubClient client)
+		public PresenceService(IPubNubClient client, IAccessManager access)
 		{
 			Environment = client.Environment;
 			Channel = client.Channel;
+
+			Access = access;
 		}
 
 		public async Task<SessionStateResponse<TState>> SessionState<TState>()
 			where TState : class
 		{
-			var response = await Environment.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegments("v2", "presence")
 				.AppendPathSegments("sub_key", Environment.SubscribeKey)
 				.AppendPathSegments("channel", Channel.Name)
-				.AppendPathSegments("uuid", Environment.SessionUuid)
+				.AppendPathSegments("uuid", Environment.SessionUuid);
+
+			await EstablishAccess(requestUrl);
+
+			var response = await requestUrl
 				.GetAsync()
 				.ProcessResponse()
 				.ReceiveJson<PubNubStateResponse<TState>>();
@@ -44,18 +54,26 @@ namespace PubNub.Async.Presence.Services
 		public async Task<SessionStateResponse<TState>> SessionState<TState>(TState state)
 			where TState : class
 		{
-			var response = await Environment.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegments("v2", "presence")
 				.AppendPathSegments("sub_key", Environment.SubscribeKey)
 				.AppendPathSegments("channel", Channel.Name)
 				.AppendPathSegments("uuid", Environment.SessionUuid)
 				.AppendPathSegment("data")
-				.SetQueryParam("state", JsonConvert.SerializeObject(state))
+				.SetQueryParam("state", JsonConvert.SerializeObject(state));
+
+			await EstablishAccess(requestUrl);
+
+			var response = await requestUrl
 				.GetAsync()
 				.ProcessResponse()
 				.ReceiveJson<PubNubStateResponse<TState>>();
 
-			return ConstructResponse(response);
+			return new SessionStateResponse<TState>
+			{
+				Success = response?.Status == HttpStatusCode.OK,
+				State = response?.Payload
+			};
 		}
 
 		public async Task<SubscribersResponse<TState>> Subscribers<TState>(bool includeSessionState = false, bool includeUuids = true)
@@ -74,6 +92,8 @@ namespace PubNub.Async.Presence.Services
 			{
 				requestUrl.SetQueryParam("state", 1);
 			}
+
+			await EstablishAccess(requestUrl);
 
 			var response = await requestUrl
 				.GetAsync()
@@ -106,10 +126,14 @@ namespace PubNub.Async.Presence.Services
 
 		public async Task<SubscriptionsResponse> Subscriptions()
 		{
-			var response = await Environment.Host
+			var requestUrl = Environment.Host
 				.AppendPathSegments("v2", "presence")
 				.AppendPathSegments("sub_key", Environment.SubscribeKey)
-				.AppendPathSegments("uuid", Environment.SessionUuid)
+				.AppendPathSegments("uuid", Environment.SessionUuid);
+			
+			await EstablishAccess(requestUrl);
+
+			var response = await requestUrl
 				.GetAsync()
 				.ProcessResponse()
 				.ReceiveJson<PubNubSubscriptionsResponse>();
@@ -122,14 +146,18 @@ namespace PubNub.Async.Presence.Services
 			};
 		}
 
-		private SessionStateResponse<TState> ConstructResponse<TState>(PubNubStateResponse<TState> response)
-			where TState : class
+		private async Task EstablishAccess(Url requestUrl)
 		{
-			return new SessionStateResponse<TState>
+			if (Channel.Secured)
 			{
-				Success = response?.Status == HttpStatusCode.OK,
-				State = response?.Payload
-			};
+				var grantResponse = await Access.Establish(AccessType.Read);
+				if (!grantResponse.Success)
+				{
+					//TODO: throw exception?
+				}
+
+				requestUrl.SetQueryParam("auth", Environment.AuthenticationKey);
+			}
 		}
 	}
 }

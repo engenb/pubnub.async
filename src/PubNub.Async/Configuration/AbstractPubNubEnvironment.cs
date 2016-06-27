@@ -4,8 +4,6 @@ namespace PubNub.Async.Configuration
 {
 	public abstract class AbstractPubNubEnvironment : IPubNubEnvironment
 	{
-		private string _sessionUuid;
-
 		protected AbstractPubNubEnvironment()
 		{
 			Reset();
@@ -16,6 +14,7 @@ namespace PubNub.Async.Configuration
 		public string Origin { get; set; }
 		public string Host => $"{(SslEnabled ? "https://" : "http://")}{Origin}";
 
+		private string _sessionUuid;
 		public string SessionUuid
 		{
 			get
