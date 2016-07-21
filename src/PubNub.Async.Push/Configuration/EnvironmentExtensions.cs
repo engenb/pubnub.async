@@ -1,6 +1,7 @@
 ﻿using System;
 using PubNub.Async.Configuration;
 using PubNub.Async.Push.Services;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Publish;
 
 namespace PubNub.Async.Push.Configuration
@@ -16,7 +17,10 @@ namespace PubNub.Async.Push.Configuration
 					$"Incompatible Environment: {nameof(environment)} must implement ${typeof (IRegisterService).Name}");
 			}
 
-			registrar.Register<IPushService>(client => new PushService(client, environment.Resolve<IPublishService>(client)));
+			registrar.Register<IPushService>(client => new PushService(
+                client,
+                environment.Resolve<IAccessManager>(client),
+                environment.Resolve<IPublishService>(client)));
 		}
 	}
 }

@@ -17,7 +17,6 @@ namespace PubNub.Async.Tests
 				c.MinutesToTimeout = Fixture.Create<int>();
 				c.Origin = Fixture.Create<string>();
 				c.PublishKey = Fixture.Create<string>();
-				c.SdkVersion = Fixture.Create<string>();
 				c.SecretKey = Fixture.Create<string>();
 				c.SessionUuid = Fixture.Create<string>();
 				c.SslEnabled = Fixture.Create<bool>();
@@ -33,7 +32,6 @@ namespace PubNub.Async.Tests
 			Assert.Equal(PubNub.Environment.MinutesToTimeout, subject.Environment.MinutesToTimeout);
 			Assert.Equal(PubNub.Environment.Origin, subject.Environment.Origin);
 			Assert.Equal(PubNub.Environment.PublishKey, subject.Environment.PublishKey);
-			Assert.Equal(PubNub.Environment.SdkVersion, subject.Environment.SdkVersion);
 			Assert.Equal(PubNub.Environment.SecretKey, subject.Environment.SecretKey);
 			Assert.Equal(PubNub.Environment.SessionUuid, subject.Environment.SessionUuid);
 			Assert.Equal(PubNub.Environment.SslEnabled, subject.Environment.SslEnabled);

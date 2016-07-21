@@ -30,7 +30,6 @@ namespace PubNub.Async.Autofac
 					c.MinutesToTimeout = oldEnvironment.MinutesToTimeout;
 					c.Origin = oldEnvironment.Origin;
 					c.PublishKey = oldEnvironment.PublishKey;
-					c.SdkVersion = oldEnvironment.SdkVersion;
 					c.SecretKey = oldEnvironment.SecretKey;
 					c.SessionUuid = oldEnvironment.SessionUuid;
 					c.SslEnabled = oldEnvironment.SslEnabled;

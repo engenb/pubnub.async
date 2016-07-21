@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using PubNub.Async.Push.Services;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Publish;
 
 namespace PubNub.Async.Push.Autofac
@@ -20,8 +21,9 @@ namespace PubNub.Async.Push.Autofac
 					}
 
 					var context = c.Resolve<IComponentContext>();
-					var publishFn = context.Resolve<Func<IPubNubClient, IPublishService>>();
-					return new PushService(client, publishFn(client));
+				    var access = context.Resolve<Func<IPubNubClient, IAccessManager>>();
+					var publish = context.Resolve<Func<IPubNubClient, IPublishService>>();
+					return new PushService(client, access(client), publish(client));
 				});
 		}
 	}

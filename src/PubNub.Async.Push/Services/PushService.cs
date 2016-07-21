@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -7,9 +9,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Channel;
 using PubNub.Async.Models.Publish;
 using PubNub.Async.Push.Models;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Publish;
 
 namespace PubNub.Async.Push.Services
@@ -18,15 +22,19 @@ namespace PubNub.Async.Push.Services
 	{
 		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
-		private IPublishService Publish { get; }
 
-		public const string DEVICE_SUCCESS_COUNT = "1";
-		public const string DEVICE_SUCCESS_MESSAGE = "Modified Channels";
+        private IAccessManager Access { get; }
+        private IPublishService Publish { get; }
 
-		public PushService(IPubNubClient client, IPublishService publish)
+		protected const int DeviceSuccessCount = 1;
+        protected const string DeviceSuccessMessage = "Modified Channels";
+
+		public PushService(IPubNubClient client, IAccessManager access, IPublishService publish)
 		{
 			Environment = client.Environment;
 			Channel = client.Channel;
+
+		    Access = access;
 			Publish = publish;
 		}
 
@@ -37,14 +45,22 @@ namespace PubNub.Async.Push.Services
 				throw new ArgumentException("Cannot be null or empty", nameof(token));
 			}
 
-			var requestUrl = BuildDeviceUrl(type, token, "add");
-			var result = await requestUrl
-				.ConfigureClient(s => s.AllowedHttpStatusRange = "403")
-				.GetAsync()
-				.ProcessResponse()
-				.ReceiveString();
+		    if (Channel.Secured && Environment.GrantCapable())
+		    {
+		        var grantResponse = await Access.Establish(AccessType.Write);
+		        if (!grantResponse.Success)
+		        {
+		            //TODO: error!
+		        }
+		    }
 
-			return ParseDeviceResult(result);
+			var requestUrl = BuildDeviceUrl(type, token, "add");
+		    var httpResponse = await requestUrl
+		        .AllowHttpStatus("403")
+		        .GetAsync()
+		        .ProcessResponse();
+
+			return await HandleResponse(httpResponse);
 		}
 
 		public async Task<PushResponse> Revoke(DeviceType type, string token)
@@ -52,16 +68,24 @@ namespace PubNub.Async.Push.Services
 			if (string.IsNullOrWhiteSpace(token))
 			{
 				throw new ArgumentException("Cannot be null or empty", nameof(token));
-			}
+            }
 
-			var requestUrl = BuildDeviceUrl(type, token, "remove");
-			var result = await requestUrl
-				.ConfigureClient(s => s.AllowedHttpStatusRange = "403")
-				.GetAsync()
-				.ProcessResponse()
-				.ReceiveString();
+            if (Channel.Secured && Environment.GrantCapable())
+            {
+                var grantResponse = await Access.Establish(AccessType.Write);
+                if (!grantResponse.Success)
+                {
+                    //TODO: error!
+                }
+            }
 
-			return ParseDeviceResult(result);
+            var requestUrl = BuildDeviceUrl(type, token, "remove");
+		    var httpResponse = await requestUrl
+		        .AllowHttpStatus("403")
+		        .GetAsync()
+		        .ProcessResponse();
+
+			return await HandleResponse(httpResponse);
 		}
 
 		public Task<PublishResponse> PublishPushNotification(string message, bool isDebug = false)
@@ -102,44 +126,49 @@ namespace PubNub.Async.Push.Services
 					break;
 			}
 
-			return Environment.Host
-				.AppendPathSegments("v1", "push")
-				.AppendPathSegments("sub-key", Environment.SubscribeKey)
-				.AppendPathSegments("devices", token)
-				.SetQueryParam("type", pushService)
-				.SetQueryParam(action, Channel.Name);
+            var requestUrl = Environment.Host
+                .AppendPathSegments("v1", "push")
+                .AppendPathSegments("sub-key", Environment.SubscribeKey)
+                .AppendPathSegments("devices", token)
+                .SetQueryParam("type", pushService)
+                .SetQueryParam(action, Channel.Name);
+
+		    if (!string.IsNullOrWhiteSpace(Environment.AuthenticationKey))
+		    {
+		        requestUrl.SetQueryParam("auth", Environment.AuthenticationKey);
+		    }
+
+		    return requestUrl;
 		}
 
-		private PushResponse ParseDeviceResult(string result)
-		{
-			var response = new PushResponse
-			{
-				Message = "Unknown error occurred while attempting to modify device registration"
-			};
+		private async Task<PushResponse> HandleResponse(HttpResponseMessage httpResponse)
+        {
+            var response = new PushResponse
+            {
+                Message = "Unknown error occurred while attempting to modify device registration"
+            };
 
-			if (result != null)
-			{
-				var parsedResult = JToken.Parse(result);
-				if (parsedResult.Type == JTokenType.Array)
-				{
-					var arrayValues = parsedResult.Children().Values<object>().ToList();
-					if (arrayValues.Count == 2
-					    && arrayValues[0].ToString() == DEVICE_SUCCESS_COUNT
-					    && arrayValues[1].ToString() == DEVICE_SUCCESS_MESSAGE)
-					{
-						response.Success = true;
-						response.Message = arrayValues[1].ToString();
-					}
-				}
-				else if (parsedResult.Type == JTokenType.Object)
-				{
-					JToken errorToken;
-					if (((JObject) parsedResult).TryGetValue("error", out errorToken))
-					{
-						response.Message = errorToken.Value<string>();
-					}
-				}
-			}
+            if (httpResponse.IsSuccessStatusCode)
+		    {
+		        var content = await Task.FromResult(httpResponse)
+		            .ReceiveJson<JArray>();
+
+		        if (content?.Count == 2)
+		        {
+		            if (content[0].Value<int>() == DeviceSuccessCount
+		                && content[1].Value<string>() == DeviceSuccessMessage)
+		            {
+		                response.Success = true;
+                    }
+                    response.Message = content[1].Value<string>();
+                }
+		    }
+            else if (httpResponse.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var content = await Task.FromResult(httpResponse)
+                    .ReceiveJson<PubNubForbiddenResponse>();
+                response.Message = content.Message;
+            }
 
 			return response;
 		}

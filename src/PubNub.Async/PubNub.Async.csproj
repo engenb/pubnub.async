@@ -51,6 +51,8 @@
     <Compile Include="IPubNubClient.cs" />
     <Compile Include="Models\Access\AccessType.cs" />
     <Compile Include="Models\Access\GrantResponse.cs" />
+    <Compile Include="Models\Access\PubNubForbiddenResponse.cs" />
+    <Compile Include="Models\Access\PubNubForbiddenResponsePayload.cs" />
     <Compile Include="Models\Access\PubNubGrantResponse.cs" />
     <Compile Include="Models\Access\PubNubGrantResponseAuths.cs" />
     <Compile Include="Models\Access\PubNubGrantResponsePayload.cs" />

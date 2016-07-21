@@ -6,6 +6,7 @@ using PubNub.Async.Extensions;
 using PubNub.Async.Models.Publish;
 using PubNub.Async.Push.Models;
 using PubNub.Async.Push.Services;
+using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Publish;
 using Xunit;
 
@@ -15,6 +16,7 @@ namespace PubNub.Async.Push.Tests
 	{
 		private PushService CreateSubject(
 			IPubNubClient client = null,
+            IAccessManager access = null,
 			IPublishService publish = null)
 		{
 			var mockClient = client ??
@@ -25,9 +27,10 @@ namespace PubNub.Async.Push.Tests
 						c.SslEnabled = true;
 					});
 
-			var mockPublish = publish ?? new Mock<IPublishService>().Object;
+		    var mockAccess = access ?? Mock.Of<IAccessManager>();
+		    var mockPublish = publish ?? Mock.Of<IPublishService>();
 
-			return new PushService(mockClient, mockPublish);
+			return new PushService(mockClient, mockAccess, mockPublish);
 		}
 
 		[Fact]
@@ -46,6 +49,7 @@ namespace PubNub.Async.Push.Tests
 			{
 				httpTest.RespondWithJson(200, null);
 				var response = await subject.Register(DeviceType.Android, "token");
+
 				Assert.False(response.Success);
 				Assert.NotNull(response.Message);
 			}
