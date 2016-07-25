@@ -70,7 +70,7 @@
     server: https://www.myget.org/F/engenb/api/v2
     api_key:
       secure: nx1kpAst2K0y+ZYR1KPxCutTiLSUeOE0SL/mb8RFMzdjaxhDmOm4eCYd6YKV7shG
-	symbol_server: https://nuget.symbolsource.org/MyGet/engenb
+    symbol_server: https://nuget.symbolsource.org/MyGet/engenb
 
 # Branches and Pull Requests - no nuget publish
 -
