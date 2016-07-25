@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using PubNub.Async.Models.Channel;
+using PubNub.Async.Models;
 using PubNub.Async.Models.History;
 using PubNub.Async.Services.History;
 
@@ -7,7 +7,7 @@ namespace PubNub.Async.Extensions
 {
 	public static class HistoryExtensions
 	{
-		public static Task<HistoryResponse<TContent>> History<TContent>(
+		public static Task<HistoryResponse<TMessage>> History<TMessage>(
 			this string channel,
 			long? start = null,
 			long? end = null,
@@ -16,10 +16,10 @@ namespace PubNub.Async.Extensions
 			bool includeTime = true)
 		{
 			return new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime);
+				.History<TMessage>(start, end, count, order, includeTime);
 		}
 
-		public static Task<HistoryResponse<TContent>> History<TContent>(
+		public static Task<HistoryResponse<TMessage>> History<TMessage>(
 			this Channel channel,
 			long? start = null,
 			long? end = null,
@@ -28,10 +28,10 @@ namespace PubNub.Async.Extensions
 			bool includeTime = true)
 		{
 			return new PubNubClient(channel)
-				.History<TContent>(start, end, count, order, includeTime);
+				.History<TMessage>(start, end, count, order, includeTime);
 		}
 
-		public static async Task<HistoryResponse<TContent>> History<TContent>(
+		public static async Task<HistoryResponse<TMessage>> History<TMessage>(
 			this IPubNubClient client,
 			long? start = null,
 			long? end = null,
@@ -41,7 +41,7 @@ namespace PubNub.Async.Extensions
 		{
 			return await PubNub.Environment
 				.Resolve<IHistoryService>(client)
-				.History<TContent>(start, end, count, order, includeTime)
+				.History<TMessage>(start, end, count, order, includeTime)
 				.ConfigureAwait(false);
 		}
 	}

@@ -1,5 +1,5 @@
 ﻿using Ploeh.AutoFixture;
-using PubNub.Async.Models.Channel;
+using PubNub.Async.Models;
 using PubNub.Async.Tests.Common;
 using Xunit;
 

@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
-using PubNub.Async.Models.Channel;
 
 namespace PubNub.Async.Services.Access
 {

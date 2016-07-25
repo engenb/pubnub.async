@@ -3,6 +3,7 @@ using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Crypto;
 using PubNub.Async.Services.History;
 using PubNub.Async.Services.Publish;
+using PubNub.Async.Services.Subscribe;
 using Xunit;
 
 namespace PubNub.Async.Autofac.Tests
@@ -26,9 +27,9 @@ namespace PubNub.Async.Autofac.Tests
 			var publish = PubNub.Environment.Resolve<IPublishService>(client);
 			Assert.NotNull(publish);
 
-			var access = PubNub.Environment.Resolve<IAccessManager>(client);
-			Assert.NotNull(access);
-
+		    var subscribe = PubNub.Environment.Resolve<ISubscribeService>(client);
+            Assert.NotNull(subscribe);
+            
 			var history = PubNub.Environment.Resolve<IHistoryService>(client);
 			Assert.NotNull(history);
 		}

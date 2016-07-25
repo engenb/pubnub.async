@@ -11,7 +11,7 @@ namespace PubNub.Async.Tests.Models.Channel
 		public void ctor__Given_ChannelName__Then_SetName()
 		{
 			var expectedChannelName = Fixture.Create<string>();
-			var subject = new Async.Models.Channel.Channel(expectedChannelName);
+			var subject = new Async.Models.Channel(expectedChannelName);
 
 			Assert.Equal(expectedChannelName, subject.Name);
 		}
@@ -19,14 +19,14 @@ namespace PubNub.Async.Tests.Models.Channel
 		[Fact]
 		public void ctor__Given_NullChannelName__Then_ThrowEx()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => new Async.Models.Channel.Channel(null));
+			var ex = Assert.Throws<ArgumentException>(() => new Async.Models.Channel(null));
 			Assert.Equal(ex.ParamName, "name");
 		}
 
 		[Fact]
 		public void ctor__Given_WhitespaceChannelName__Then_ThrowEx()
 		{
-			var ex = Assert.Throws<ArgumentException>(() => new Async.Models.Channel.Channel(" "));
+			var ex = Assert.Throws<ArgumentException>(() => new Async.Models.Channel(" "));
 			Assert.Equal(ex.ParamName, "name");
 		}
 	}

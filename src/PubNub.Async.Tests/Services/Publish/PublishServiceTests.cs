@@ -5,7 +5,9 @@ using Moq;
 using Newtonsoft.Json;
 using PCLCrypto;
 using Ploeh.AutoFixture;
+using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
 using PubNub.Async.Models.Publish;
 using PubNub.Async.Services.Access;
@@ -53,7 +55,7 @@ namespace PubNub.Async.Tests.Services.Publish
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {1, expectedResultMessage, expectedResultSent});
+				httpTest.RespondWithJson(new object[] {1, expectedResultMessage, expectedResultSent});
 
 				response = await subject.Publish(message, false);
 
@@ -102,7 +104,7 @@ namespace PubNub.Async.Tests.Services.Publish
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {1, expectedResultMessage, expectedResultSent});
+				httpTest.RespondWithJson(new object[] {1, expectedResultMessage, expectedResultSent});
 
 				response = await subject.Publish(message, false);
 
@@ -124,23 +126,44 @@ namespace PubNub.Async.Tests.Services.Publish
 			var expectedGrantResponse = new GrantResponse {Success = false, Message = expectedGrantResponseMessage};
 
 			var message = new PublishTestMessage {Message = "TEST"};
+			
+			var channelName = Fixture.Create<string>();
+			var channel = new Channel(channelName)
+			{
+				Secured = true
+			};
 
-			var client = "channel"
-				.Secured();
+			var mockEnv = new Mock<IPubNubEnvironment>();
+			mockEnv
+				.Setup(x => x.GrantCapable())
+				.Returns(true);
+
+			var mockClient = new Mock<IPubNubClient>();
+			mockClient
+				.SetupGet(x => x.Environment)
+				.Returns(mockEnv.Object);
+			mockClient
+				.SetupGet(x => x.Channel)
+				.Returns(channel);
 
 			var mockAccess = new Mock<IAccessManager>();
 			mockAccess
 				.Setup(x => x.Establish(AccessType.Write))
 				.ReturnsAsync(expectedGrantResponse);
 
-			var subject = new PublishService(client, Mock.Of<ICryptoService>(), mockAccess.Object);
+			var subject = new PublishService(mockClient.Object, Mock.Of<ICryptoService>(), mockAccess.Object);
 
-			var result = await subject.Publish(message, false);
+			using (var httpTest = new HttpTest())
+			{
+				var result = await subject.Publish(message, false);
 
-			Assert.NotNull(result);
-			Assert.False(result.Success);
-			Assert.Equal(expectedGrantResponseMessage, result.Message);
-			Assert.Equal(0, result.Sent);
+				httpTest.ShouldNotHaveCalled("*");
+
+				Assert.NotNull(result);
+				Assert.False(result.Success);
+				Assert.Equal(expectedGrantResponseMessage, result.Message);
+				Assert.Equal(0, result.Sent);
+			}
 		}
 
 		[Fact]

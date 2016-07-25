@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Tests", "PubNu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~Solution Items", "~Solution Items", "{337A4B12-D203-4C24-9EBA-2C88B218ECFA}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 		SharedAssemblyVersionInfo.cs = SharedAssemblyVersionInfo.cs
 	EndProjectSection
@@ -46,6 +47,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presence", "Presence", "{29AE09A5-D521-4234-95AF-BD517E44242C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Presence.Tests", "PubNub.Async.Presence.Tests\PubNub.Async.Presence.Tests.csproj", "{0B6FCE0E-146D-45B5-A7DC-A7961F32EDA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~TestApp", "~TestApp", "{FC31FDC9-EBD4-423E-9AB7-2858EE435963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubNub.Async.Tests.App", "PubNub.Async.Tests.App\PubNub.Async.Tests.App.csproj", "{00E00C3F-5D77-4FCF-ADCF-218A715660F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +106,10 @@ Global
 		{0B6FCE0E-146D-45B5-A7DC-A7961F32EDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B6FCE0E-146D-45B5-A7DC-A7961F32EDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B6FCE0E-146D-45B5-A7DC-A7961F32EDA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00E00C3F-5D77-4FCF-ADCF-218A715660F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00E00C3F-5D77-4FCF-ADCF-218A715660F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E00C3F-5D77-4FCF-ADCF-218A715660F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00E00C3F-5D77-4FCF-ADCF-218A715660F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,5 +129,6 @@ Global
 		{0E8B4967-CCB1-446A-9EC9-C057DEFA2840} = {A507E4E5-5883-4A1D-A483-410DAE08B21C}
 		{29AE09A5-D521-4234-95AF-BD517E44242C} = {FA0CE46C-75F1-4EB9-93DA-5AB179418BF0}
 		{0B6FCE0E-146D-45B5-A7DC-A7961F32EDA6} = {29AE09A5-D521-4234-95AF-BD517E44242C}
+		{00E00C3F-5D77-4FCF-ADCF-218A715660F6} = {FC31FDC9-EBD4-423E-9AB7-2858EE435963}
 	EndGlobalSection
 EndGlobal

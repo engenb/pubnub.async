@@ -5,6 +5,6 @@ namespace PubNub.Async.Services.Publish
 {
 	public interface IPublishService
 	{
-		Task<PublishResponse> Publish<TContent>(TContent message, bool recordHistory = true);
+		Task<PublishResponse> Publish<TMessage>(TMessage message, bool recordHistory = true);
 	}
 }

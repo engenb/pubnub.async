@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
-using PubNub.Async.Models.Channel;
+using PubNub.Async.Models;
 using PubNub.Async.Models.History;
 using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Crypto;

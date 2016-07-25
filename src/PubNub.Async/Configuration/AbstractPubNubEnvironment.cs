@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace PubNub.Async.Configuration
 {
@@ -46,7 +47,7 @@ namespace PubNub.Async.Configuration
 			SslEnabled = true;
 		}
 
-		public IPubNubEnvironment Clone()
+	    public IPubNubEnvironment Clone()
 		{
 			return (IPubNubEnvironment) MemberwiseClone();
 		}

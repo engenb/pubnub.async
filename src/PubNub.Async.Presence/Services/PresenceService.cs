@@ -6,8 +6,8 @@ using Flurl.Http;
 using Newtonsoft.Json;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
-using PubNub.Async.Models.Channel;
 using PubNub.Async.Presence.Models;
 using PubNub.Async.Services.Access;
 

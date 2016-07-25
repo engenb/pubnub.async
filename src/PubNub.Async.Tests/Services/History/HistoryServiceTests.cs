@@ -33,7 +33,7 @@ namespace PubNub.Async.Tests.Services.History
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
+				httpTest.RespondWithJson(new object[] {new HistoryTestMessage[] {}, 1234, 1234});
 
 				await subject.History<HistoryTestMessage>();
 
@@ -60,7 +60,7 @@ namespace PubNub.Async.Tests.Services.History
 
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {new HistoryTestMessage[] {}, 1234, 1234});
+				httpTest.RespondWithJson(new object[] {new HistoryTestMessage[] {}, 1234, 1234});
 
 				await subject.History<HistoryTestMessage>();
 

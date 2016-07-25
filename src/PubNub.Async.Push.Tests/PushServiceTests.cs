@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
 using Moq;
@@ -47,7 +48,7 @@ namespace PubNub.Async.Push.Tests
 			var subject = CreateSubject();
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, null);
+				httpTest.RespondWithJson(null);
 				var response = await subject.Register(DeviceType.Android, "token");
 
 				Assert.False(response.Success);
@@ -62,7 +63,7 @@ namespace PubNub.Async.Push.Tests
 			var subject = CreateSubject();
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {1, expectedMessage});
+				httpTest.RespondWithJson(new object[] {1, expectedMessage});
 				var response = await subject.Register(DeviceType.Android, "token");
 				Assert.True(response.Success);
 				Assert.Equal(expectedMessage, response.Message);
@@ -83,7 +84,7 @@ namespace PubNub.Async.Push.Tests
 			var subject = CreateSubject();
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, null);
+				httpTest.RespondWithJson(null);
 				var response = await subject.Revoke(DeviceType.Android, "token");
 				Assert.False(response.Success);
 				Assert.NotNull(response.Message);
@@ -97,7 +98,7 @@ namespace PubNub.Async.Push.Tests
 			var subject = CreateSubject();
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWithJson(200, new object[] {1, expectedMessage});
+				httpTest.RespondWithJson(new object[] {1, expectedMessage});
 				var response = await subject.Revoke(DeviceType.Android, "token");
 				Assert.True(response.Success);
 				Assert.Equal(expectedMessage, response.Message);

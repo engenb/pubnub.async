@@ -12,7 +12,7 @@ namespace PubNub.Async.Models.Access
 		public string Message { get; set; }
 
 		[JsonProperty("payload")]
-		public PubNubGrantResponsePayload Paylaod { get; set; }
+		public PubNubGrantResponsePayload Payload { get; set; }
 
 		[JsonProperty("service")]
 		public string Service { get; set; }

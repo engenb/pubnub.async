@@ -1,6 +1,6 @@
 ﻿using System;
 using PubNub.Async.Configuration;
-using PubNub.Async.Models.Channel;
+using PubNub.Async.Models;
 
 namespace PubNub.Async.Extensions
 {

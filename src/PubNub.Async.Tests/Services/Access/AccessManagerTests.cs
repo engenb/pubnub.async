@@ -8,8 +8,8 @@ using Moq;
 using Newtonsoft.Json;
 using Ploeh.AutoFixture;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
-using PubNub.Async.Models.Channel;
 using PubNub.Async.Services.Access;
 using PubNub.Async.Tests.Common;
 using PubNub.Async.Tests.Common.Properties;
@@ -44,7 +44,7 @@ namespace PubNub.Async.Tests.Services.Access
 				.Setup(x => x.CachedRegistration(channel, authKey))
 				.ReturnsAsync(expected);
 
-			var subject = new AccessManager(client, mockRegistry.Object);
+			var subject = new AccessManager(client.Environment, client.Channel, mockRegistry.Object);
 
 			var result = await subject.Establish(access);
 
@@ -74,14 +74,16 @@ namespace PubNub.Async.Tests.Services.Access
 			var pnResponse = Fixture
 				.Build<PubNubGrantResponse>()
 				.With(x => x.Status, HttpStatusCode.OK)
-				.With(x => x.Paylaod, paylaod)
+				.With(x => x.Payload, paylaod)
 				.Create();
 
 			var expectedResult = new GrantResponse
 			{
 				Success = true,
+				SubscribeKey = pnResponse.Payload.SubscribeKey,
+				Channel = pnResponse.Payload.Channel,
 				Message = pnResponse.Message,
-				MinutesToExpire = pnResponse.Paylaod.MintuesToExpire,
+				MinutesToExpire = pnResponse.Payload.MintuesToExpire,
 				Access = access
 			};
 
@@ -99,7 +101,7 @@ namespace PubNub.Async.Tests.Services.Access
 				.Setup(x => x.Granted(channel, authKey, access))
 				.Returns(false);
 
-			var subject = new AccessManager(client, mockRegistry.Object);
+			var subject = new AccessManager(client.Environment, client.Channel, mockRegistry.Object);
 
 			using (var httpTest = new HttpTest())
 			{

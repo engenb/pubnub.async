@@ -40,6 +40,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\AbstractPubNubEnvironment.cs" />
+    <Compile Include="Configuration\DefaultResolveSubscription.cs" />
     <Compile Include="Configuration\IRegisterService.cs" />
     <Compile Include="Extensions\AccessExtensions.cs" />
     <Compile Include="Extensions\ChannelExtensions.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Extensions\HttpResponseMethodPostProcessExtensions.cs" />
     <Compile Include="Configuration\IPubNubEnvironment.cs" />
     <Compile Include="Extensions\PublishExtensions.cs" />
+    <Compile Include="Extensions\SubscribeExtensions.cs" />
     <Compile Include="IPubNubClient.cs" />
     <Compile Include="Models\Access\AccessType.cs" />
     <Compile Include="Models\Access\GrantResponse.cs" />
@@ -57,10 +59,15 @@
     <Compile Include="Models\Access\PubNubGrantResponseAuths.cs" />
     <Compile Include="Models\Access\PubNubGrantResponsePayload.cs" />
     <Compile Include="Models\Access\AccessRegistration.cs" />
-    <Compile Include="Models\Channel\Channel.cs" />
+    <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\History\HistoryMessage.cs" />
     <Compile Include="Models\History\HistoryResponse.cs" />
     <Compile Include="Models\Publish\PublishResponse.cs" />
+    <Compile Include="Models\Subscribe\PubNubSubscribeResponse.cs" />
+    <Compile Include="Models\Subscribe\PubNubSubscribeResponseMessage.cs" />
+    <Compile Include="Models\Subscribe\PubNubSubscribeResponseTime.cs" />
+    <Compile Include="Models\Subscribe\SubscribeResponse.cs" />
+    <Compile Include="Models\Subscribe\Subscription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PubNub.cs" />
     <Compile Include="PubNubClient.cs" />
@@ -76,14 +83,23 @@
     <Compile Include="Services\History\HistoryOrder.cs" />
     <Compile Include="Services\Publish\IPublishService.cs" />
     <Compile Include="Services\Publish\PublishService.cs" />
+    <Compile Include="Services\Subscribe\IResolveSubscription.cs" />
+    <Compile Include="Services\Subscribe\ISubscriptionMonitor.cs" />
+    <Compile Include="Services\Subscribe\ISubscribeService.cs" />
+    <Compile Include="Services\Subscribe\ISubscriptionRegistry.cs" />
+    <Compile Include="Services\Subscribe\MessageReceivedEventArgs.cs" />
+    <Compile Include="Services\Subscribe\MessageReceivedHandler.cs" />
+    <Compile Include="Services\Subscribe\SubscriptionMonitor.cs" />
+    <Compile Include="Services\Subscribe\SubscribeService.cs" />
+    <Compile Include="Services\Subscribe\SubscriptionRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Flurl, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.2.0.0\lib\portable-net40+win+wpa81+wp80+MonoAndroid10+MonoTouch10\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.1.0\lib\portable40-net40+win8+wpa81\Flurl.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Flurl.Http, Version=0.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.0.10.1\lib\portable-net45+win+wpa81+wp80\Flurl.Http.dll</HintPath>
+    <Reference Include="Flurl.Http, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.1.0.0\lib\portable45-net45+win8+wpa81\Flurl.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -94,8 +110,8 @@
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PCLCrypto, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d4421c8a4786956c, processorArchitecture=MSIL">

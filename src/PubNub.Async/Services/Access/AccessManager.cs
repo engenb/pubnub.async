@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 using PCLCrypto;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
-using PubNub.Async.Models.Channel;
 using static PCLCrypto.WinRTCrypto;
 
 namespace PubNub.Async.Services.Access
@@ -20,12 +20,12 @@ namespace PubNub.Async.Services.Access
 		private IPubNubEnvironment Environment { get; }
 		private Channel Channel { get; }
 
-		public AccessManager(IPubNubClient client, IAccessRegistry accessRegistry)
+		public AccessManager(IPubNubEnvironment environment, Channel channel, IAccessRegistry accessRegistry)
 		{
 			AccessRegistry = accessRegistry;
 
-			Environment = client.Environment;
-			Channel = client.Channel;
+			Environment = environment;
+			Channel = channel;
 		}
 
 		public async Task<GrantResponse> Establish(AccessType access)
@@ -120,7 +120,7 @@ namespace PubNub.Async.Services.Access
 
 			var access = AccessType.None;
 
-			var auths = pubNubResponse.Paylaod.Auths;
+			var auths = pubNubResponse.Payload.Auths;
 			if (auths.ContainsKey(Environment.AuthenticationKey))
 			{
 				var grant = auths[Environment.AuthenticationKey];
@@ -136,8 +136,10 @@ namespace PubNub.Async.Services.Access
 			{
 				Success = 200 <= (int) pubNubResponse.Status && (int) pubNubResponse.Status < 400,
 				Message = pubNubResponse.Message,
-				Access = access,
-				MinutesToExpire = pubNubResponse.Paylaod.MintuesToExpire
+                SubscribeKey = pubNubResponse.Payload.SubscribeKey,
+                Channel = pubNubResponse.Payload.Channel,
+                Access = access,
+				MinutesToExpire = pubNubResponse.Payload.MintuesToExpire
 			};
 		}
 	}

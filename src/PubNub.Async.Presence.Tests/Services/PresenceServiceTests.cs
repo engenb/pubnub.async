@@ -364,7 +364,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SecretKey = Settings.Default.PamSecKey;
 				});
 
-			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
+			var subject = new PresenceService(client, new AccessManager(client.Environment, client.Channel, new AccessRegistry()));
 
 			var setResult = await subject.SessionState(state);
 
@@ -419,7 +419,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SecretKey = Settings.Default.PamSecKey;
 				});
 
-			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
+			var subject = new PresenceService(client, new AccessManager(client.Environment, client.Channel, new AccessRegistry()));
 
 			var result = await subject.Subscribers<JObject>(false, false);
 
@@ -501,7 +501,7 @@ namespace PubNub.Async.Presence.Tests.Services
 					c.SecretKey = Settings.Default.PamSecKey;
 				});
 
-			var subject = new PresenceService(client, new AccessManager(client, new AccessRegistry()));
+			var subject = new PresenceService(client, new AccessManager(client.Environment, client.Channel, new AccessRegistry()));
 
 			var result = await subject.Subscriptions();
 

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -7,8 +9,8 @@ using Newtonsoft.Json.Linq;
 using PCLCrypto;
 using PubNub.Async.Configuration;
 using PubNub.Async.Extensions;
+using PubNub.Async.Models;
 using PubNub.Async.Models.Access;
-using PubNub.Async.Models.Channel;
 using PubNub.Async.Models.Publish;
 using PubNub.Async.Services.Access;
 using PubNub.Async.Services.Crypto;
@@ -39,7 +41,7 @@ namespace PubNub.Async.Services.Publish
 		{
 			var msg = JsonConvert.SerializeObject(message);
 
-			if (Channel.Secured)
+			if (Channel.Secured && Environment.GrantCapable())
 			{
 				var grantResponse = await Access.Establish(AccessType.Write);
 				if (!grantResponse.Success)
@@ -87,38 +89,43 @@ namespace PubNub.Async.Services.Publish
 				requestUrl.SetQueryParam("store", "0");
 			}
 
-			var rawResponse = await requestUrl.GetAsync()
-				.ProcessResponse()
-				.ReceiveString();
+		    var httpResponse = await requestUrl.GetAsync()
+		        .ProcessResponse();
 
-			return DeserializeResponse(rawResponse);
+			return await HandleResponse(httpResponse);
 		}
 
-		private PublishResponse DeserializeResponse(string rawResponse)
+		private async Task<PublishResponse> HandleResponse(HttpResponseMessage response)
 		{
-			if (!string.IsNullOrWhiteSpace(rawResponse))
-			{
-				var parsedResponse = JToken.Parse(rawResponse);
-				if (parsedResponse.Type == JTokenType.Array)
-				{
-					var array = parsedResponse.ToArray();
-					if (array.Length == 3)
-					{
-						return new PublishResponse
-						{
-							Success = array[0].Value<bool>(),
-							Message = array[1].Value<string>(),
-							Sent = array[2].Value<long>()
-						};
-					}
-				}
-			}
+		    if (response.IsSuccessStatusCode)
+		    {
+		        var content = await Task.FromResult(response)
+		            .ReceiveJson<JToken>();
+		        return new PublishResponse
+		        {
+		            Success = content[0].Value<bool>(),
+		            Message = content[1].Value<string>(),
+		            Sent = content[2].Value<long>()
+		        };
+		    }
 
-			return new PublishResponse
-			{
-				Success = false,
-				Message = rawResponse
-			};
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var content = await Task.FromResult(response)
+                    .ReceiveJson<PubNubForbiddenResponse>();
+                return new PublishResponse
+                {
+                    Success = false,
+                    Message = content.Message
+                };
+            }
+
+            return new PublishResponse
+            {
+                Success = false,
+                Message = await Task.FromResult(response)
+                    .ReceiveString()
+            };
 		}
 	}
 }
