@@ -42,6 +42,10 @@ namespace PubNub.Async.Services.Subscribe
 
         public void Register(IPubNubEnvironment environment, long subscribeTimeToken)
         {
+	        if (string.IsNullOrWhiteSpace(environment?.AuthenticationKey))
+	        {
+		        throw new InvalidOperationException("Attempted to register a subscribe time token without a configured authentication key");
+	        }
             SubscribeTimeTokens[environment.AuthenticationKey] = subscribeTimeToken;
         }
 

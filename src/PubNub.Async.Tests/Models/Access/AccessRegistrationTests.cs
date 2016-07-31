@@ -191,5 +191,15 @@ namespace PubNub.Async.Tests.Models.Access
 		}
 
 		#endregion
+
+		[Fact]
+		public void AccessValid__Given_None__Then_ReturnFalse()
+		{
+			var subject = new AccessRegistration();
+
+			var result = subject.AccessValid(AccessType.None);
+
+			Assert.False(result);
+		}
 	}
 }

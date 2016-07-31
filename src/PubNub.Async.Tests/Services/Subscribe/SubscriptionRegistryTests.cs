@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using Ploeh.AutoFixture;
 using PubNub.Async.Configuration;

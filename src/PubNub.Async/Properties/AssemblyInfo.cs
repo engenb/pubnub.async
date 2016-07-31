@@ -15,4 +15,5 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("PubNub.Async.Autofac"),
            InternalsVisibleTo("PubNub.Async.Testing"),
-           InternalsVisibleTo("PubNub.Async.Tests")]
+		   InternalsVisibleTo("PubNub.Async.Tests"),
+		   InternalsVisibleTo("PubNub.Async.Autofac.Tests"),]
